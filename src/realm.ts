@@ -13,6 +13,8 @@ async function login() {
   }
 }
 type page = {
+  tractate: string,
+  daf: string,
   main: {
     lines: Array<string>,
     sentences: Array<string>
@@ -22,7 +24,12 @@ type page = {
 }
 async function getPage(tractate: string, daf: string) : Promise<page | undefined> {
   if (user) {
-    return await user.functions.getPage(tractate, daf);
+    const returned = await user.functions.getPage(tractate, daf);
+    if (returned) {
+      returned.tractate = tractate;
+      returned.daf = daf;
+    }
+    return returned;
   }
   else throw new Error("User wasn't logged in");
 }

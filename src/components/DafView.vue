@@ -14,7 +14,8 @@ import {getPage, login, page} from "../realm";
       daf: String
     },
     data: () => ({
-      page: {} as page
+      page: {} as page,
+      loadedPages: [] as Array<page>,
     }),
     async mounted () {
       await login();
@@ -35,11 +36,18 @@ import {getPage, login, page} from "../realm";
     },
     methods: {
       async loadPage(): Promise<void> {
-        //TODO: Check validity of daf
+        //TODO: Check validity of tractate/daf
         if (this.tractate && this.daf) {
-          const returnedPage = await getPage(this.tractate, this.daf);
-          if (returnedPage) {
-            this.page = returnedPage;
+          const alreadyLoaded = this.loadedPages.find(
+            page => page.tractate == this.tractate && page.daf == this.daf)
+          if (alreadyLoaded) {
+            this.page = alreadyLoaded;
+            return;
+          }
+          const newlyLoadedPage = await getPage(this.tractate, this.daf);
+          if (newlyLoadedPage) {
+            this.page = newlyLoadedPage;
+            this.loadedPages.push(newlyLoadedPage);
           }
         }
       }
