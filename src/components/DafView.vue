@@ -14,7 +14,11 @@
     components: {DafRenderer},
     props: {
       tractate: String,
-      daf: String
+      daf: String,
+      scale: {
+        type: Boolean,
+        default: true
+      }
     },
     data: () => ({
       page: {} as page,
@@ -41,6 +45,7 @@
         }
       },
       transformStyles () {
+        if (!this.scale) return;
         const scale = (this.windowWidth * this.dafOfWindow) / (this.dafWidth);
         return {
           transform: `scale(${scale})`,

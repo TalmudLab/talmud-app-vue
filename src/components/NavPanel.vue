@@ -1,5 +1,7 @@
 <template>
-  <NavListView></NavListView>
+  <div class="w-1/3">
+    <NavListView :sentences="currentSentences"></NavListView>
+  </div>
 </template>
 
 <script lang="ts">
@@ -9,6 +11,7 @@
   import {defineComponent} from "vue";
 
   export default defineComponent({
+    components: {NavListView},
     setup() {
       return { currentSentences, currentDaf }
     }
