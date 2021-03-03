@@ -1,5 +1,7 @@
 <template>
-  <DafRenderer :texts="texts" :amud="'b'"></DafRenderer>
+  <div id="daf-container">
+    <DafRenderer :texts="texts" :amud="'b'"></DafRenderer>
+  </div>
 </template>
 
 <script lang="ts">
@@ -75,6 +77,9 @@
 </script>
 
 <style>
+  #daf-container {
+    width: 200%;
+  }
   .tosafot-header {
     font-family: Vilna;
     font-size: 135%;

@@ -1,11 +1,14 @@
 <template>
-  <DafView :tractate="currentDaf.tractate" :daf="currentDaf.daf"></DafView>
-  <div class="right">
-    <input v-model="currentDaf.daf">
-    <ol>
-      <li v-for="sentence in currentSentences" v-html="sentence.english"></li>
-    </ol>
+  <div class="flex flex-row">
+    <div>
+      <input v-model="currentDaf.daf">
+      <ol>
+        <li v-for="sentence in currentSentences" v-html="sentence.english"></li>
+      </ol>
+    </div>
+    <DafView :tractate="currentDaf.tractate" :daf="currentDaf.daf"></DafView>
   </div>
+
 
 </template>
 
