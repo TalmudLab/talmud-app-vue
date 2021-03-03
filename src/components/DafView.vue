@@ -1,5 +1,5 @@
 <template>
-  <div id="daf-container">
+  <div id="daf-container" :style="transformStyles">
     <DafRenderer :texts="texts" :amud="'b'"></DafRenderer>
   </div>
 </template>
@@ -19,10 +19,14 @@
     data: () => ({
       page: {} as page,
       loadedPages: [] as Array<page>,
+      windowWidth: window.innerWidth,
+      dafWidth: 600,
+      dafOfWindow: 4.95/12,
     }),
     async mounted () {
       await login();
       this.loadPage();
+      window.addEventListener('resize', this.onResize)
     },
     computed: {
       texts () {
@@ -34,6 +38,13 @@
           const rashiHTML: string = this.page.rashi.replaceAll(headerRegex, "<b class='rashi-header'>$1</b>");
           const tosafotHTML: string = this.page.tosafot.replaceAll(headerRegex, "<b class='tosafot-header'>$1</b>");
           return [mainHTML, rashiHTML, tosafotHTML];
+        }
+      },
+      transformStyles () {
+        const scale = (this.windowWidth * this.dafOfWindow) / (this.dafWidth);
+        return {
+          transform: `scale(${scale})`,
+          'transform-origin': 'top left'
         }
       }
     },
@@ -63,7 +74,10 @@
             }
           }
         }
-      }
+      },
+      onResize() {
+        this.windowWidth = window.innerWidth;
+      },
     },
     watch: {
       tractate (newVal, oldVal) {
@@ -78,7 +92,6 @@
 
 <style>
   #daf-container {
-    width: 200%;
   }
   .tosafot-header {
     font-family: Vilna;
