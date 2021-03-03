@@ -17,7 +17,8 @@ type page = {
   daf: string,
   main: {
     lines: Array<string>,
-    sentences: Array<string>
+    sentences: Array<string>,
+    enSentences: Array<string>,
   },
   rashi: string,
   tosafot: string

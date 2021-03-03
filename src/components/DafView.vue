@@ -4,8 +4,9 @@
 
 <script lang="ts">
   import { defineComponent } from "vue";
-import {getPage, login, page} from "../realm";
+  import {getPage, login, page} from "../realm";
   import DafRenderer from "./DafRenderer.vue";
+  import {sentence, addSentences} from "../state/sentences";
 
   export default defineComponent({
     components: {DafRenderer},
@@ -48,6 +49,16 @@ import {getPage, login, page} from "../realm";
           if (newlyLoadedPage) {
             this.page = newlyLoadedPage;
             this.loadedPages.push(newlyLoadedPage);
+            const heSentences = newlyLoadedPage?.main?.sentences;
+            const enSentences = newlyLoadedPage?.main?.enSentences;
+            if (heSentences && enSentences && heSentences.length == enSentences.length) {
+              const sentences: Array<sentence> = heSentences.map( (hebrew, index) => ({
+                english: enSentences[index],
+                hebrew,
+                index
+              }));
+              addSentences(this.tractate, this.daf, sentences);
+            }
           }
         }
       }
