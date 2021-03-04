@@ -40,6 +40,7 @@
               // vertical: "0px"
             },
             mainWidth: "42%",
+            lineBreaks: true,
           });
           renderPropsTexts();
       });
