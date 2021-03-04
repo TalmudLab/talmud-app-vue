@@ -14,7 +14,7 @@ type sentenceRender = {
 }
 
 const loadedSentences = reactive<{[daf: string]: Array<sentenceRender>}>({})
-let selectedSentence: { daf: string, tractate: string, index: number };
+let selectedSentence = reactive<{ daf: string, tractate: string, index: number } >({});
 const currentDafString = computed(() => currentDaf.tractate + currentDaf.daf)
 
 const currentSentences = computed(() => {
@@ -24,11 +24,9 @@ const currentSentences = computed(() => {
 })
 
 function selectSentence(tractate: string, daf: string, index: number) {
-  selectedSentence = {
-    tractate,
-    daf,
-    index
-  }
+  selectedSentence.tractate = tractate;
+  selectedSentence.daf = daf;
+  selectedSentence.index = index;
 }
 
 function addSentences(tractate: string, daf: string, sentences: Array<sentence>) {

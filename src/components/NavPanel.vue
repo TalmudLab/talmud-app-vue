@@ -22,8 +22,13 @@
         }
         return -1;
       },
-      onSelected ({index}) {
-        console.log("GOT IT", index)
+    },
+    methods: {
+      onSelected ({index}: {index: number}) {
+        if (index != selectedSentence?.index) {
+          selectSentence(currentDaf.tractate, currentDaf.daf, index);
+          console.log("reselect")
+        }
       }
     }
   })
