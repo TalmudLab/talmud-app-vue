@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from "vue";
+import {defineComponent, watch} from "vue";
   import {getPage, login, page} from "../realm";
   import DafRenderer from "./DafRenderer.vue";
-  import {sentence, addSentences} from "../state/sentences";
+  import {sentence, addSentences, selectedSentence} from "../state/sentences";
 
   export default defineComponent({
     components: {DafRenderer},
@@ -18,6 +18,18 @@
       scale: {
         type: Boolean,
         default: true
+      }
+    },
+    setup (props) {
+      watch(selectedSentence, (sentence, prev) => {
+        if (sentence.tractate == props.tractate && sentence.daf == props.daf) {
+          const main = document.querySelectorAll(".sentence-main");
+          main.forEach(el => el.classList.remove('highlighted'));
+          main[sentence.index].classList.add('highlighted');
+        }
+      })
+      return {
+        selectedSentence
       }
     },
     data: () => ({
@@ -68,7 +80,11 @@
             this.page = newlyLoadedPage;
             this.loadedPages.push(newlyLoadedPage);
             const heSentences = newlyLoadedPage?.main?.sentences;
-            const enSentences = newlyLoadedPage?.main?.enSentences;
+            let enSentences = newlyLoadedPage?.main?.enSentences;
+            //TODO: fix this server-side
+            if (enSentences?.length == 2 && Array.isArray(enSentences[0])) {
+              enSentences = enSentences[0];
+            }
             if (heSentences && enSentences && heSentences.length == enSentences.length) {
               const sentences: Array<sentence> = heSentences.map( (hebrew, index) => ({
                 english: enSentences[index],
@@ -90,13 +106,16 @@
       },
       daf (newVal, oldVal) {
         this.loadPage();
-      }
+      },
     }
   })
 </script>
 
 <style>
   #daf-container {
+  }
+  .highlighted {
+    background-color: lightblue;
   }
   .tosafot-header {
     font-family: Vilna;

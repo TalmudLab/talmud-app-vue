@@ -6,7 +6,7 @@
          @click="$emit('selected', { index })"
          :class="{'flex-row-reverse': !english}"
     >
-      <div class="flex-none flex items-center" >
+      <div class="flex-none flex items-center" :class="{'highlighted': selectedIndex == index, 'flex-row-reverse': !english}">
         <!--          <div :style="indenterStyles(index)"></div>-->
         <div v-for="i in render.indent" class="w-4 h-full"
              :class="[dropClass, {'bg-blue-100': dragging == index}, {'bg-blue-400': dragging == index && draggingOver == i - 1}]"
@@ -31,7 +31,7 @@
 
         <div v-if="expanded.has(index)" class="flex" :class="{'flex-row-reverse': !english}">
           <div class="flex flex-col" :class="{'flex-col-reverse': !english}">
-            <div class="text-xs" v-html="render.sentence.english"></div>
+            <div class="text-sm" v-html="render.sentence.english"></div>
             <div class="rtl text-right" v-html="render.sentence.hebrew"></div>
           </div>
           <div class="self-start float-right">

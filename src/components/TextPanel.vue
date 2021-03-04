@@ -4,13 +4,13 @@
      flex flex-row items-center
      w-full px-2 h-9
      bg-blue-200 rounded-t-md">
-      <a>
+      <a class="hover:text-blue-500" @click="prev">
         <i class="fas fa-arrow-alt-circle-left nav-button"></i>
         Prev
       </a>
 
       <h1 class="font-serif flex-grow text-center text-lg">{{headerText}}</h1>
-      <a>
+      <a class="hover:text-blue-500" @click="next">
         Next
         <i class="fas fa-arrow-alt-circle-right nav-button"></i>
       </a>
@@ -25,12 +25,12 @@
 
   import { defineComponent } from "vue"
   import DafView from "./DafView.vue";
-  import {currentDaf} from "../state/daf";
+  import {currentDaf, next, prev} from "../state/daf";
   import {currentSentences} from "../state/sentences";
   export default defineComponent({
     components: {DafView},
     setup() {
-      return { currentDaf, currentSentences }
+      return { currentDaf, next, prev, currentSentences }
     },
     computed: {
       headerText() {
@@ -41,8 +41,7 @@
         }
         return header;
       }
-    }
-
+    },
   })
 
 </script>
