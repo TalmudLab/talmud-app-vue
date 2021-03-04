@@ -1,6 +1,22 @@
 <template>
-  <div class="w-1/3">
-    <NavListView :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected"></NavListView>
+  <div class="w-1/3 mr-2">
+    <div class="
+     flex flex-row items-center
+     w-full px-2 h-9
+     bg-red-200 rounded-t-md">
+      <div class="text-sm">
+        <a class="hover:font-bold cursor-pointer" :class="{'font-bold': english}" @click="english = true">
+          English
+        </a>
+        /
+        <a class="hover:font-bold cursor-pointer" :class="{'font-bold': !english}" @click="english = false">
+          Hebrew
+        </a>
+      </div>
+
+      <h1 class="font-serif flex-grow text-center text-lg">Navigation</h1>
+    </div>
+    <NavListView :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavListView>
   </div>
 </template>
 
@@ -15,6 +31,9 @@
     setup() {
       return { currentSentences, selectedSentence, selectSentence, currentDaf }
     },
+    data: () => ({
+      english: true
+    }),
     computed: {
       selectedIndex() {
         if (selectedSentence && selectedSentence.tractate == currentDaf.tractate && selectedSentence.daf == currentDaf.daf) {
