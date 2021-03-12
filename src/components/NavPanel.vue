@@ -3,7 +3,7 @@
     <div class="
      flex flex-row items-center
      w-full px-2 h-9
-     bg-red-200 rounded-t-md">
+     bg-blue-200 rounded-t-md">
       <div class="text-sm">
         <a class="hover:font-bold cursor-pointer" :class="{'font-bold': english}" @click="english = true">
           English

@@ -3,7 +3,7 @@
     <div class="
      flex flex-row items-center
      w-full px-2 h-9
-     bg-blue-200 rounded-t-md">
+     rounded-t-md">
       <a class="hover:text-blue-500" @click="prev">
         <i class="fas fa-arrow-alt-circle-left nav-button"></i>
         Prev

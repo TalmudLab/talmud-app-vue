@@ -3,6 +3,7 @@
     <div v-for="(render, index) in renderList" class="flex"
          :key="render.renderIndex"
          @mouseover="hovered = index"
+         @mouseout="hovered = null"
          @click="$emit('selected', { index })"
          :class="{'flex-row-reverse': !english}"
     >
@@ -36,7 +37,7 @@
           </div>
           <div class="self-start float-right">
             <a @click="expanded.delete(index)">
-              <i class="fas text-xl fa-caret-up"></i>
+              <i class="fas text-xl fa-caret-down"></i>
             </a>
           </div>
         </div>
@@ -44,8 +45,8 @@
              :class="{'flex-row-reverse': !english}">
           <div class="text-sm flex-grow font-semibold truncate" :class="{rtl: !english}" v-html="english ? render.shortEn : render.shortHe">
           </div>
-          <a @click="expanded.add(index)">
-            <i class="expand-icon fas text-xl"  :class="[english ? 'fa-caret-right' : 'fa-caret-left']"></i>
+          <a v-show="hovered == index" @click="expanded.add(index)">
+            <i class="fas text-xl"  :class="[english ? 'fa-caret-right' : 'fa-caret-left']"></i>
           </a>
         </div>
       </div>
@@ -168,11 +169,5 @@ import {defineComponent, onMounted, PropType, ref} from "vue";
 <style>
   .text-gap {
     @apply text-xs text-gray-500 font-normal
-  }
-  .contracted-sentence:hover .expand-icon {
-    opacity: 100%;
-  }
-  .contracted-sentence .expand-icon {
-    opacity: 0%;
   }
 </style>

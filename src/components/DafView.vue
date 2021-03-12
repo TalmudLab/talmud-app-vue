@@ -115,7 +115,7 @@ import {defineComponent, watch} from "vue";
   #daf-container {
   }
   .highlighted {
-    background-color: lightblue;
+    background-color: #BFDBFE;
   }
   .tosafot-header {
     font-family: Vilna;
