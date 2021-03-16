@@ -1,6 +1,6 @@
 <template>
   <div id="daf-container" :style="transformStyles">
-    <DafRenderer :texts="texts" :amud="'b'"></DafRenderer>
+    <DafRenderer :texts="texts" :amud="amud"></DafRenderer>
   </div>
 </template>
 
@@ -63,6 +63,12 @@ import {defineComponent, watch} from "vue";
           transform: `scale(${scale})`,
           'transform-origin': 'top left'
         }
+      },
+      amud () {
+        if (this.daf[this.daf.length - 1] == 'b') {
+          return 'b';
+        }
+        return 'a';
       }
     },
     methods: {
