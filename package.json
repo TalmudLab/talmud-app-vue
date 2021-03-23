@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
-    "daf-renderer": "^1.1.1",
     "realm-web": "^1.2.0",
     "vue": "^3.0.5"
   },

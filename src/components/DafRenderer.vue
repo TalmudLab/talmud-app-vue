@@ -23,24 +23,24 @@
       function renderPropsTexts() {
         if (props.texts?.length) {
           const [main, rashi, tosafot] : Array<string> = props.texts;
-          renderer.render(main, rashi, tosafot, props.amud);
+          renderer.render(main, rashi, tosafot, props.amud, "br");
         }
       }
 
       onMounted(() => {
           renderer = renderFactory(daf.value, {
-            contentWidth: "600px",
+            contentWidth: "650px",
             fontSize: {
               side: "10.5px"
+            },
+            padding: {
+              vertical: "10px"
             },
             lineHeight: {
               main: "16px"
             },
-            padding: {
-              // vertical: "0px"
-            },
             mainWidth: "42%",
-            lineBreaks: 1,
+            lineBreaks: "br"
           });
           renderPropsTexts();
       });
