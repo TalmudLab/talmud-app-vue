@@ -55,13 +55,17 @@ import {
             selectSentence(props.tractate, props.daf, index);
         }))
 
-        const setupWrapper = (header: Element, index: number, text : "tosafot" | "rashi") => {
+        let count = 0;
+        const setupWrapper = (header: Element, text : "tosafot" | "rashi") => {
+          if (!header || header.parentElement?.classList.contains(sentenceClass[text])) {
+            return;
+          }
           let curr = header.nextSibling;
           const betweenNodes = [];
           if (text == "tosafot") {
             if (!curr)
               throw new Error("Unexpected tosafot formatting")
-            betweenNodes.push(curr); //Curr is second header element
+            betweenNodes.push(curr); //Curr is second header element (or first text element, but there's guaranteed to be one)
             curr = curr.nextSibling;
           }
           while (curr && (curr.nodeType == 3 || curr.nodeName == "BR")) {
@@ -72,14 +76,16 @@ import {
           wrapper.classList.add(sentenceClass[text]);
           header.parentNode.insertBefore(wrapper, header);
           wrapper.append(header, ...betweenNodes);
+          const index = count++;
           wrapper.addEventListener("click", () => selectCommentary(props.tractate, props.daf, index, text));
         }
 
         document.querySelectorAll(".rashi-header")
-          .forEach( (header, index) => setupWrapper(header, index, "rashi"));
+          .forEach( (header, index) => setupWrapper(header, "rashi"));
 
-        document.querySelectorAll(".tosafot-header:nth-of-type(odd)")
-          .forEach( (firstHeader, index) => setupWrapper(firstHeader, index, "tosafot"));
+        count = 0;
+        document.querySelectorAll(".tosafot-header")
+          .forEach( (firstHeader, index) => setupWrapper(firstHeader, "tosafot"));
       }
       return {
         selectedSentence,
