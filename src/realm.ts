@@ -21,8 +21,11 @@ type page = {
     enSentences: Array<string>,
   },
   rashi: string,
-  tosafot: string
+  tosafot: string,
+  sefariaRashi: Array<Array<string>>,
+  sefariaTosafot: Array<Array<string>>
 }
+
 async function getPage(tractate: string, daf: string) : Promise<page | undefined> {
   if (user) {
     const returned = await user.functions.getPage(tractate, daf);

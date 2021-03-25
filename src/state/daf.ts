@@ -8,7 +8,7 @@ type daf = {
 //TODO: only expose get/set, set should have validation
 const currentDaf = reactive<daf>({
   tractate: "Berakhot",
-  daf: "31b"
+  daf: "2b"
 });
 
 function next() {

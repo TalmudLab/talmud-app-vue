@@ -1,6 +1,6 @@
 <template>
   <div id="daf-container" :style="transformStyles">
-    <DafRenderer :texts="texts" :amud="amud"></DafRenderer>
+    <DafRenderer :texts="texts" :amud="amud" @rendered="onRendered"></DafRenderer>
   </div>
 </template>
 
@@ -8,8 +8,17 @@
 import {defineComponent, watch} from "vue";
   import {getPage, login, page} from "../realm";
   import DafRenderer from "./DafRenderer.vue";
-  import {sentence, addSentences, selectedSentence} from "../state/sentences";
+import {
+  addSentences,
+  selectedSentence,
+  selectSentence, addCommentaryMaps, selectCommentary, selectedCommentary
+} from "../state/sentences";
 
+  const sentenceClass = {
+    main: "sentence-main",
+    tosafot: "sentence-tosafot",
+    rashi: "sentence-rashi"
+  }
   export default defineComponent({
     components: {DafRenderer},
     props: {
@@ -23,13 +32,56 @@ import {defineComponent, watch} from "vue";
     setup (props) {
       watch(selectedSentence, (sentence, prev) => {
         if (sentence.tractate == props.tractate && sentence.daf == props.daf) {
-          const main = document.querySelectorAll(".sentence-main");
+          const main = document.querySelectorAll("." + sentenceClass.main);
           main.forEach(el => el.classList.remove('highlighted'));
           main[sentence.index].classList.add('highlighted');
         }
       })
+
+      watch(selectedCommentary, (commentary, prev) => {
+        if (commentary.tractate == props.tractate && commentary.daf == props.daf) {
+          const wrappers = document.querySelectorAll("." + sentenceClass[commentary.text]);
+          wrappers.forEach(el => el.classList.remove('highlighted'));
+          wrappers[commentary.index].classList.add('highlighted');
+        }
+      })
+
+      const onRendered = () => {
+        const main = document.querySelectorAll("." + sentenceClass.main);
+        main.forEach( (el, index) => el.addEventListener("click", () => {
+          if (props.tractate && props.daf)
+            selectSentence(props.tractate, props.daf, index);
+        }))
+
+        const setupWrapper = (header: Element, index: number, text : "tosafot" | "rashi") => {
+          let curr = header.nextSibling;
+          const betweenNodes = [];
+          if (text == "tosafot") {
+            if (!curr)
+              throw new Error("Unexpected tosafot formatting")
+            betweenNodes.push(curr); //Curr is second header element
+            curr = curr.nextSibling;
+          }
+          while (curr && (curr.nodeType == 3 || curr.nodeName == "BR")) {
+            betweenNodes.push(curr);
+            curr = curr.nextSibling;
+          }
+          const wrapper = document.createElement("span");
+          wrapper.classList.add(sentenceClass[text]);
+          header.parentNode.insertBefore(wrapper, header);
+          wrapper.append(header, ...betweenNodes);
+          wrapper.addEventListener("click", () => selectCommentary(props.tractate, props.daf, index, text));
+        }
+
+        document.querySelectorAll(".rashi-header")
+          .forEach( (header, index) => setupWrapper(header, index, "rashi"));
+
+        document.querySelectorAll(".tosafot-header:nth-of-type(odd)")
+          .forEach( (firstHeader, index) => setupWrapper(firstHeader, index, "tosafot"));
+      }
       return {
-        selectedSentence
+        selectedSentence,
+        onRendered,
       }
     },
     data: () => ({
@@ -48,7 +100,7 @@ import {defineComponent, watch} from "vue";
       texts () {
         if (this.page?.main) {
           const mainHTML: string = this.page.main.sentences
-            .map(sentenceHTML => `<span class="sentence-main">${sentenceHTML}</span> `)
+            .map(sentenceHTML => `<span class="${sentenceClass.main}">${sentenceHTML}</span> `)
             .join('');
           const headerRegex = /\{([^\{\}]+)\}/g;
           const rashiHTML: string = this.page.rashi.replaceAll(headerRegex, "<b class='rashi-header'>$1</b>");
@@ -58,7 +110,7 @@ import {defineComponent, watch} from "vue";
       },
       transformStyles () {
         if (!this.scale) return;
-        const scale = (this.windowWidth * this.dafOfWindow) / (this.dafWidth);
+        const scale : number = (this.windowWidth * this.dafOfWindow) / (this.dafWidth);
         return {
           transform: `scale(${scale})`,
           'transform-origin': 'top left'
@@ -98,6 +150,7 @@ import {defineComponent, watch} from "vue";
                 index
               }));
               addSentences(this.tractate, this.daf, sentences);
+              addCommentaryMaps(this.tractate, this.daf, this.page.sefariaRashi, this.page.sefariaTosafot)
             }
           }
         }
