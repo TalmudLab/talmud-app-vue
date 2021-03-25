@@ -14,12 +14,15 @@
              :data-indent="i - 1">
         </div>
         <div :ref="setDraggerRefs" class="w-4 cursor-move" :data-index="index">
-          <div class="text-xs" v-if="hovered == index">
+          <div class="text-xs">
+            <span v-show="hovered == index">
             <i class="fas fa-arrows-alt"></i>
-          </div>
-          <span v-else class="text-lg">
+            </span>
+            <span v-show="hovered != index" class="text-lg">
             •
-          </span>
+
+            </span>
+          </div>
         </div>
         <div v-show="dragging == index" class="w-4 h-full bg-blue-100"
              :class="[dropClass, {'bg-blue-400': draggingOver == render.indent + 1}]"
