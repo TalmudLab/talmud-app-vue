@@ -26,7 +26,8 @@
         </a>
       </div>
     </div>
-    <NavListView :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavListView>
+    <NavListView v-if="list" :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavListView>
+    <NavMapView v-else :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavMapView>
   </div>
 </template>
 
@@ -35,9 +36,10 @@
   import { currentDaf } from "../state/daf";
   import NavListView from "./NavListView.vue";
   import {defineComponent} from "vue";
+  import NavMapView from "./NavMapView.vue";
 
   export default defineComponent({
-    components: {NavListView},
+    components: {NavListView, NavMapView},
     setup() {
       return { currentSentences, selectedSentence, selectSentence, currentDaf }
     },
