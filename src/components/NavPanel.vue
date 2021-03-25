@@ -15,6 +15,16 @@
       </div>
 
       <h1 class="font-serif flex-grow text-center text-lg">Navigation</h1>
+
+      <div class="text-sm">
+        <a class="hover:font-bold cursor-pointer" :class="{'font-bold': list}" @click="list = true">
+          List
+        </a>
+        /
+        <a class="hover:font-bold cursor-pointer" :class="{'font-bold': !list}" @click="list = false">
+          Map
+        </a>
+      </div>
     </div>
     <NavListView :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavListView>
   </div>
@@ -32,7 +42,8 @@
       return { currentSentences, selectedSentence, selectSentence, currentDaf }
     },
     data: () => ({
-      english: true
+      english: true,
+      list: true
     }),
     computed: {
       selectedIndex() {
