@@ -14,6 +14,8 @@ export type sentenceRender = {
   indent: number
 }
 
+export type commentary = "rashi" | "tosafot";
+
 type commentaryMap = {
   [commentaryIndex: number]: number
 }
@@ -22,13 +24,21 @@ const loadedSentences = reactive<{[daf: string]: Array<sentenceRender>}>({});
 
 const rashiMaps = reactive<{[daf: string]: commentaryMap}>({});
 const tosafotMaps = reactive<{[daf: string]: commentaryMap}>({});
+const commentaryMaps = {
+  rashi: rashiMaps,
+  tosafot: tosafotMaps
+}
+
+function dafId(tractate: string, daf: string) : string {
+  return tractate + daf;
+}
 
 export let selectedSentence = reactive<{ daf: string, tractate: string, index: number } >({});
 const currentDafString = computed(() => currentDaf.tractate + currentDaf.daf)
 export const selectedCommentary = reactive<{
   daf: string,
   tractate: string,
-  text: string,
+  text: commentary,
   index: number,
   mainSentenceIndex: number,
 }>({});
@@ -46,17 +56,23 @@ export function selectSentence(tractate: string, daf: string, index: number) {
   console.log(selectedSentence.index);
 }
 
-export function selectCommentary(tractate: string | undefined, daf: string | undefined, index: number, text: string) {
+export function selectCommentary(tractate: string | undefined, daf: string | undefined, index: number, text: commentary) {
   if (tractate && daf) {
     selectedCommentary.tractate = tractate;
     selectedCommentary.daf = daf;
     selectedCommentary.text = text;
     selectedCommentary.index = index;
+    const mainSentenceIndex = commentaryMaps[text]?.[dafId(tractate,daf)]?.[index];
+    if (mainSentenceIndex != null) {
+      selectedCommentary.mainSentenceIndex = mainSentenceIndex;
+      selectSentence(tractate, daf, mainSentenceIndex);
+    }
   }
+
 }
 
 export function addSentences(tractate: string, daf: string, sentences: Array<sentence>) {
-  const id = tractate + daf;
+  const id = dafId(tractate, daf);
   if (loadedSentences[id]) {
     console.error("Tried to add sentences for a daf that was already loaded");
     return false;
@@ -73,7 +89,7 @@ export function addSentences(tractate: string, daf: string, sentences: Array<sen
 }
 
 export function addCommentaryMaps(tractate: string, daf: string, sefariaRashi: Array<Array<String>>, sefariaTosafot: Array<Array<String>>) {
-  const id = tractate + daf;
+  const id = dafId(tractate, daf);
 
   const setMap = (mapObj, arr: Array<Array<String>>) => {
     mapObj[id] = {};

@@ -40,9 +40,11 @@ import {
 
       watch(selectedCommentary, (commentary, prev) => {
         if (commentary.tractate == props.tractate && commentary.daf == props.daf) {
-          const wrappers = document.querySelectorAll("." + sentenceClass[commentary.text]);
+          const wrappers = document.querySelectorAll(`.${sentenceClass.rashi}, .${sentenceClass.tosafot}`);
           wrappers.forEach(el => el.classList.remove('highlighted'));
-          wrappers[commentary.index].classList.add('highlighted');
+          if (commentary.index != null) {
+            document.querySelector(`.${sentenceClass[commentary.text]}:nth-of-type(${commentary.index + 1})`).classList.add('highlighted');
+          }
         }
       })
 
@@ -173,9 +175,17 @@ import {
 <style>
   #daf-container {
   }
-  .highlighted {
+  .sentence-main.highlighted {
     background-color: #BFDBFE;
   }
+  .sentence-rashi.highlighted {
+    background-color: #FECACA;
+  }
+
+  .sentence-tosafot.highlighted {
+    background-color: #FECACA;
+  }
+
   .tosafot-header {
     font-family: Vilna;
     font-size: 135%;
