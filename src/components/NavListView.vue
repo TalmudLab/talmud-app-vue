@@ -24,7 +24,7 @@
             </span>
           </div>
         </div>
-        <div v-show="dragging == index" class="w-4 h-full bg-blue-100"
+        <div v-show="dragging == index && index != 0 && render.indent < renderList[index - 1].indent + 1" class="w-4 h-full bg-blue-100"
              :class="[dropClass, {'bg-blue-400': draggingOver == render.indent + 1}]"
              :data-indent="render.indent + 1">
         </div>
