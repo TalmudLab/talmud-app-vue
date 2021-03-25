@@ -166,7 +166,10 @@ import {defineComponent, onMounted, PropType, ref} from "vue";
   })
 </script>
 
-<style>
+<style scoped>
+  .highlighted {
+    background-color: #BFDBFE;
+  }
   .text-gap {
     @apply text-xs text-gray-500 font-normal
   }
