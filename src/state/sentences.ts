@@ -92,6 +92,7 @@ export function addCommentaryMaps(tractate: string, daf: string, sefariaRashi: A
   const id = dafId(tractate, daf);
 
   const setMap = (mapObj, arr: Array<Array<String>>) => {
+    debugger;
     mapObj[id] = {};
     let commentIndex = 0;
     arr.forEach( (comments: Array<String>, mainIndex) => comments.forEach( () => {
@@ -102,6 +103,7 @@ export function addCommentaryMaps(tractate: string, daf: string, sefariaRashi: A
     setMap(rashiMaps, sefariaRashi)
   }
   if (sefariaTosafot) {
+
     setMap(tosafotMaps, sefariaTosafot)
   }
 }
