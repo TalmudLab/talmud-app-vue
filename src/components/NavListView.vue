@@ -1,11 +1,14 @@
 <template>
   <div ref="container" class="grid grid-cols-1 divide-y divide-gray-400">
+    <div v-if="renderList.length">
+      <a class="load-button" href="javascript:;" @click="loadPrevious">Load previous...</a>
+    </div>
     <div v-for="(render, index) in renderList" class="flex"
          :key="render.renderIndex"
          @mouseover="hovered = index"
          @mouseout="hovered = null"
-         @click="$emit('selected', { index })"
-         :class="{'flex-row-reverse': !english}"
+         @click="$emit('selected', { sentence: render.sentence })"
+         :class="{'highlighted': selectedIndex == index, 'flex-row-reverse': !english}"
     >
       <div class="flex-none flex items-center" :class="{'highlighted': selectedIndex == index, 'flex-row-reverse': !english}">
         <!--          <div :style="indenterStyles(index)"></div>-->
@@ -35,8 +38,8 @@
 
         <div v-if="expanded.has(index)" class="flex" :class="{'flex-row-reverse': !english}">
           <div class="flex flex-col" :class="{'flex-col-reverse': !english}">
-            <div class="text-sm" v-html="render.sentence.english"></div>
-            <div class="rtl text-right" v-html="render.sentence.hebrew"></div>
+            <div class="text-sm" v-html="render.sentence.en"></div>
+            <div class="rtl text-right" v-html="render.sentence.he"></div>
           </div>
           <div class="self-start float-right">
             <a @click="expanded.delete(index)">
@@ -54,13 +57,20 @@
         </div>
       </div>
       </div>
+    <div v-if="renderList.length">
+      <a class="load-button" href="javascript:;" @click="loadNext">Load next...</a>
+    </div>
+    <div v-else>
+      Loading...
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, onMounted, PropType, ref} from "vue";
-  import {sentence, sentenceRender} from "../state/sentences";
-  type renderInfo = sentenceRender | { shortEn: string, shortHe: string }
+import {sentenceData, sentenceRender} from "../state/types";
+import {nextSentences, prevSentences} from "../state/actions";
+  type renderInfo =  { shortEn: string, shortHe: string, renderIndex: number, indent: number, sentence: sentenceData }
   export default defineComponent({
     props: {
       sentences: Array as PropType<Array<sentenceRender>>,
@@ -71,9 +81,9 @@ import {defineComponent, onMounted, PropType, ref} from "vue";
       },
     },
     emits: {
-      selected(payload: { index: number }) {
+      selected(payload: { sentence: sentenceData }) {
         // perform runtime validation
-        return payload.index >= 0;
+        return true;
       }
     },
     data: () => ({
@@ -99,15 +109,23 @@ import {defineComponent, onMounted, PropType, ref} from "vue";
           return Array.from(this.sentences)
            .sort( (a: sentenceRender, b: sentenceRender) => a.renderIndex - b.renderIndex)
            .map(sentenceRender => ({
-             shortEn: shortenEnglish(sentenceRender.sentence.english),
-             shortHe: sentenceRender.sentence.hebrew,
-             ...sentenceRender
+             shortEn: shortenEnglish(sentenceRender.sentence.en),
+             shortHe: sentenceRender.sentence.he.replaceAll("<br>", ""),
+             indent: sentenceRender.indent.value,
+             renderIndex: sentenceRender.renderIndex,
+             sentence: sentenceRender.sentence
            }));
         }
         return []
       }
     },
     methods: {
+      loadPrevious() {
+        prevSentences();
+      },
+      loadNext() {
+        nextSentences();
+      },
       setDraggerRefs(el) {
         if (el) {
           this.draggerRefs.push(el);
@@ -144,7 +162,7 @@ import {defineComponent, onMounted, PropType, ref} from "vue";
         event.preventDefault();
         if (event.target.classList.contains(this.dropClass)) {
           console.log("dropping")
-          this.sentences[this.dragging].indent = this.draggingOver;
+          this.sentences[this.dragging].indent.value = this.draggingOver;
           this.draggingOver = -1;
         }
       });
@@ -175,5 +193,8 @@ import {defineComponent, onMounted, PropType, ref} from "vue";
   }
   .text-gap {
     @apply text-xs text-gray-500 font-normal
+  }
+  .load-button {
+    @apply ml-4 text-sm font-bold text-blue-400 hover:text-blue-300
   }
 </style>

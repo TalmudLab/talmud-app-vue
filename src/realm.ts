@@ -26,13 +26,30 @@ type page = {
   sefariaTosafot: Array<Array<string>>
 }
 
-async function getPage(tractate: string, daf: string) : Promise<page | undefined> {
+type mainSentence = {
+  he: string,
+  en: string,
+  onPage: {
+    rashi: undefined | Array<{index: number, ref: string}>,
+    tosafot: undefined | Array<{index: number, ref: string}>,
+  }
+}
+type apiPage = {
+  tractate: string,
+  daf: string
+  main: {
+    sentences: Array<mainSentence>,
+    lines: Array<string>
+  },
+  rashi: string,
+  tosafot: string,
+  rashiRefs: Array<string>,
+  tosafotRefs: Array<string>
+}
+
+async function getPage(tractate: string, daf: string) : Promise<apiPage | undefined> {
   if (user) {
-    const returned = await user.functions.getPage(tractate, daf);
-    if (returned) {
-      returned.tractate = tractate;
-      returned.daf = daf;
-    }
+    const returned = await user.functions.getPagePlus(tractate, daf);
     return returned;
   }
   else throw new Error("User wasn't logged in");
@@ -40,5 +57,6 @@ async function getPage(tractate: string, daf: string) : Promise<page | undefined
 export {
   login,
   getPage,
-  page
+  apiPage,
+  mainSentence
 }
