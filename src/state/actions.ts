@@ -76,6 +76,9 @@ export function selectCommentary(daf: daf, index: number, text: commentary) {
         //For now, only select the matching main sentence when it's on the page we're currently on.
         if (dafEquals(refData.daf, currentDaf)) {
             selectedSentence.index = refData.sentenceIndex;
+            selectedSentence.daf = currentDaf;
+        } else {
+            selectedSentence.index = -1;
         }
 
         selectedCommentaries.splice(0, selectedCommentaries.length, {

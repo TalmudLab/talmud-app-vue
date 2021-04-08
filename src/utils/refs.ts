@@ -11,8 +11,8 @@ export function fromCommentaryRef (ref: string): commentaryRefData{
   }
   const tractate = split[0];
   const daf = split[1].replace("a", "");
-  const sentenceIndex = parseInt(split[2]);
-  const commentIndex = parseInt(split[3]);
+  const sentenceIndex = parseInt(split[2]) - 1;
+  const commentIndex = parseInt(split[3]) - 1;
   return {
     daf: {tractate, daf},
     sentenceIndex,

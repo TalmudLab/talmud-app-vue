@@ -35,7 +35,9 @@ const sentenceClass = {
         if (dafEquals(sentence.daf, propsDaf())) {
           const main = document.querySelectorAll("." + sentenceClass.main);
           main.forEach(el => el.classList.remove('highlighted'));
-          main[sentence.index].classList.add('highlighted');
+          if (main[sentence.index]) {
+            main[sentence.index].classList.add('highlighted');
+          }
         }
       })
 
