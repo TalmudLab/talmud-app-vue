@@ -12,6 +12,7 @@ import {
 } from "../state/selections";
 import {apiPage, login}  from "../realm";
 import { loadPage, selectSentence, selectCommentary } from "../state/actions";
+import {dafEquals} from "../utils/compare";
 
 const sentenceClass = {
     main: "sentence-main",
@@ -29,8 +30,9 @@ const sentenceClass = {
       }
     },
     setup (props) {
+      const propsDaf = { tractate: props.tractate, daf: props.daf }
       watch(selectedSentence, (sentence, prev) => {
-        if (sentence.tractate == props.tractate && sentence.daf == props.daf) {
+        if (dafEquals(sentence.daf, propsDaf)) {
           const main = document.querySelectorAll("." + sentenceClass.main);
           main.forEach(el => el.classList.remove('highlighted'));
           main[sentence.index].classList.add('highlighted');
@@ -38,7 +40,7 @@ const sentenceClass = {
       })
 
       watch(selectedCommentary, (commentary, prev) => {
-        if (commentary.tractate == props.tractate && commentary.daf == props.daf) {
+        if (dafEquals(commentary.daf, propsDaf)) {
           const wrappers = document.querySelectorAll(`.${sentenceClass.rashi}, .${sentenceClass.tosafot}`);
           wrappers.forEach(el => el.classList.remove('highlighted'));
           if (commentary.index != null) {

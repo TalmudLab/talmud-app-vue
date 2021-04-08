@@ -73,7 +73,7 @@ import {sentenceData, sentenceRender} from "../state/types";
     emits: {
       selected(payload: { sentence: sentenceData }) {
         // perform runtime validation
-        return payload.index >= 0;
+        return true;
       }
     },
     data: () => ({
