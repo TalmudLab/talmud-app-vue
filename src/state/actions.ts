@@ -2,7 +2,7 @@ import {getPage, page} from "../realm";
 import {dafId, loadedPages} from "./loaded";
 import {currentDaf, currentSentenceRange} from "./current";
 import {commentary, daf} from "./types";
-import {selectedCommentary, selectedSentence} from "./selections";
+import {selectedCommentaries, selectedSentence} from "./selections";
 import {fromCommentaryRef} from "../utils/refs";
 import {dafEquals} from "../utils/compare";
 
@@ -50,20 +50,20 @@ export function selectSentence(daf: daf, index: number) {
         const onPage = pageData.main.sentences[index]?.onPage;
         if (onPage) {
             //For now, just select the first connected rashi and tosafot
-            if (onPage.rashi?.length) {
-                const first = onPage.rashi[0];
-                selectedCommentary.text = "rashi";
-                selectedCommentary.daf = daf;
-                selectedCommentary.index = first.index;
-                selectedCommentary.ref = first.ref;
-            }
-            if (onPage.tosafot?.length) {
-                const first = onPage.tosafot[0];
-                selectedCommentary.text = "tosafot";
-                selectedCommentary.daf = daf;
-                selectedCommentary.index = first.index;
-                selectedCommentary.ref = first.ref;
-            }
+            const newlySelected = [];
+            const textNames: Array<commentary> = ["rashi", "tosafot"];
+            textNames.forEach(textName => {
+                if (onPage[textName]?.length)
+                    onPage[textName].forEach(comment => {
+                        newlySelected.push({
+                            daf,
+                            text: textName,
+                            index: comment.index,
+                            ref: comment.ref
+                        })
+                    })
+            })
+            selectedCommentaries.splice(0, selectedCommentaries.length, ...newlySelected);
         }
     }
 }
@@ -78,10 +78,9 @@ export function selectCommentary(daf: daf, index: number, text: commentary) {
             selectedSentence.index = refData.sentenceIndex;
         }
 
-        selectedCommentary.daf = daf;
-        selectedCommentary.text = text;
-        selectedCommentary.index = index;
-        selectedCommentary.ref = ref;
+        selectedCommentaries.splice(0, selectedCommentaries.length, {
+            daf, text, index, ref
+        });
     }
 
 }

@@ -8,7 +8,7 @@
 import {defineComponent, watch} from "vue";
   import DafRenderer from "./DafRenderer.vue";
 import {
-  selectedSentence, selectedCommentary
+  selectedSentence, selectedCommentaries
 } from "../state/selections";
 import {apiPage, login}  from "../realm";
 import { loadPage, selectSentence, selectCommentary } from "../state/actions";
@@ -30,30 +30,32 @@ const sentenceClass = {
       }
     },
     setup (props) {
-      const propsDaf = { tractate: props.tractate, daf: props.daf }
+      const propsDaf = () => ({ tractate: props.tractate, daf: props.daf });
       watch(selectedSentence, (sentence, prev) => {
-        if (dafEquals(sentence.daf, propsDaf)) {
+        if (dafEquals(sentence.daf, propsDaf())) {
           const main = document.querySelectorAll("." + sentenceClass.main);
           main.forEach(el => el.classList.remove('highlighted'));
           main[sentence.index].classList.add('highlighted');
         }
       })
 
-      watch(selectedCommentary, (commentary, prev) => {
-        if (dafEquals(commentary.daf, propsDaf)) {
-          const wrappers = document.querySelectorAll(`.${sentenceClass.rashi}, .${sentenceClass.tosafot}`);
-          wrappers.forEach(el => el.classList.remove('highlighted'));
-          if (commentary.index != null) {
-            document.querySelector(`.${sentenceClass[commentary.text]}:nth-of-type(${commentary.index + 1})`).classList.add('highlighted');
+      watch(selectedCommentaries, (now, prev) => {
+        const wrappers = document.querySelectorAll(`.${sentenceClass.rashi}, .${sentenceClass.tosafot}`);
+        wrappers.forEach(el => el.classList.remove('highlighted'));
+        selectedCommentaries.forEach(commentary => {
+          if (dafEquals(commentary.daf, propsDaf())) {
+            if (commentary.index != null) {
+              document.querySelector(`.${sentenceClass[commentary.text]}:nth-of-type(${commentary.index + 1})`).classList.add('highlighted');
+            }
           }
-        }
+        })
       })
 
       const onRendered = () => {
         const main = document.querySelectorAll("." + sentenceClass.main);
         main.forEach( (el, index) => el.addEventListener("click", () => {
           if (props.tractate && props.daf)
-            selectSentence({tractate: props.tractate, daf: props.daf}, index);
+            selectSentence(propsDaf(), index);
         }))
 
         let count = 0;
