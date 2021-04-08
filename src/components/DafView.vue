@@ -6,15 +6,14 @@
 
 <script lang="ts">
 import {defineComponent, watch} from "vue";
-  import {getPage, login, page} from "../realm";
   import DafRenderer from "./DafRenderer.vue";
 import {
-  addSentences,
-  selectedSentence,
-  selectSentence, addCommentaryMaps, selectCommentary, selectedCommentary
-} from "../state/sentences";
+  selectedSentence, selectedCommentary
+} from "../state/selections";
+import {apiPage, login}  from "../realm";
+import { loadPage, selectSentence, selectCommentary } from "../state/actions";
 
-  const sentenceClass = {
+const sentenceClass = {
     main: "sentence-main",
     tosafot: "sentence-tosafot",
     rashi: "sentence-rashi"
@@ -52,7 +51,7 @@ import {
         const main = document.querySelectorAll("." + sentenceClass.main);
         main.forEach( (el, index) => el.addEventListener("click", () => {
           if (props.tractate && props.daf)
-            selectSentence(props.tractate, props.daf, index);
+            selectSentence({tractate: props.tractate, daf: props.daf}, index);
         }))
 
         let count = 0;
@@ -77,7 +76,7 @@ import {
           header.parentNode.insertBefore(wrapper, header);
           wrapper.append(header, ...betweenNodes);
           const index = count++;
-          wrapper.addEventListener("click", () => selectCommentary(props.tractate, props.daf, index, text));
+          wrapper.addEventListener("click", () => selectCommentary({tractate: props.tractate, daf: props.daf}, index, text));
         }
 
         document.querySelectorAll(".rashi-header")
@@ -93,8 +92,7 @@ import {
       }
     },
     data: () => ({
-      page: {} as page,
-      loadedPages: [] as Array<page>,
+      page: {} as apiPage,
       windowWidth: window.innerWidth,
       dafWidth: 600,
       dafOfWindow: 4.95/12,
@@ -108,6 +106,7 @@ import {
       texts () {
         if (this.page?.main) {
           const mainHTML: string = this.page.main.sentences
+            .map(mainSentence => mainSentence.he)
             .map(sentenceHTML => `<span class="${sentenceClass.main}">${sentenceHTML}</span> `)
             .join('');
           const headerRegex = /\{([^\{\}]+)\}/g;
@@ -132,36 +131,9 @@ import {
       }
     },
     methods: {
-      async loadPage(): Promise<void> {
-        //TODO: Check validity of tractate/daf
-        if (this.tractate && this.daf) {
-          const alreadyLoaded = this.loadedPages.find(
-            page => page.tractate == this.tractate && page.daf == this.daf)
-          if (alreadyLoaded) {
-            this.page = alreadyLoaded;
-            return;
-          }
-          const newlyLoadedPage = await getPage(this.tractate, this.daf);
-          if (newlyLoadedPage) {
-            this.page = newlyLoadedPage;
-            this.loadedPages.push(newlyLoadedPage);
-            const heSentences = newlyLoadedPage?.main?.sentences;
-            let enSentences = newlyLoadedPage?.main?.enSentences;
-            //TODO: fix this server-side
-            if (enSentences?.length == 2 && Array.isArray(enSentences[0])) {
-              enSentences = enSentences[0];
-            }
-            if (heSentences && enSentences && heSentences.length == enSentences.length) {
-              const sentences: Array<sentence> = heSentences.map( (hebrew, index) => ({
-                english: enSentences[index],
-                hebrew,
-                index
-              }));
-              addSentences(this.tractate, this.daf, sentences);
-              addCommentaryMaps(this.tractate, this.daf, this.page.sefariaRashi, this.page.sefariaTosafot)
-            }
-          }
-        }
+      async loadPage() {
+        const page = await loadPage(this.tractate, this.daf);
+        if (page) this.page = page;
       },
       onResize() {
         this.windowWidth = window.innerWidth;

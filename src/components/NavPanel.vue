@@ -32,11 +32,11 @@
 </template>
 
 <script lang="ts">
-  import { currentSentences, selectedSentence, selectSentence} from "../state/sentences";
-  import { currentDaf } from "../state/daf";
   import NavListView from "./NavListView.vue";
   import {defineComponent} from "vue";
   import NavMapView from "./NavMapView.vue";
+  import {currentDaf} from "../state/current";
+  import {selectSentence} from "../state/actions";
 
   export default defineComponent({
     components: {NavListView, NavMapView},
@@ -58,7 +58,7 @@
     methods: {
       onSelected ({index}: {index: number}) {
         if (index != selectedSentence?.index) {
-          selectSentence(currentDaf.tractate, currentDaf.daf, index);
+          selectSentence({ , index);
           console.log("reselect")
         }
       }

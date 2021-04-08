@@ -9,9 +9,9 @@
 import { defineComponent, onMounted } from 'vue'
 import TextPanel from "./components/TextPanel.vue";
 import {login, getPage, page} from "./realm";
-import {currentDaf} from "./state/daf";
 import { currentSentences } from "./state/sentences";
 import NavPanel from "./components/NavPanel.vue";
+import {currentDaf} from "./state/current";
 
 export default defineComponent({
   name: 'App',

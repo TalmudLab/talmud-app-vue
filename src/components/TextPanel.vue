@@ -25,12 +25,13 @@
 
   import { defineComponent } from "vue"
   import DafView from "./DafView.vue";
-  import {currentDaf, next, prev} from "../state/daf";
+  import {nextDaf, prevDaf} from "../state/actions";
   import {currentSentences} from "../state/sentences";
+  import {currentDaf} from "../state/current";
   export default defineComponent({
     components: {DafView},
     setup() {
-      return { currentDaf, next, prev, currentSentences }
+      return { currentDaf, nextDaf, prevDaf, currentSentences }
     },
     computed: {
       headerText() {
