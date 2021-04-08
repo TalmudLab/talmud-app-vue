@@ -107,7 +107,7 @@ const sentenceClass = {
       page: {} as apiPage,
       windowWidth: window.innerWidth,
       dafWidth: 600,
-      dafOfWindow: 4.95/12,
+      dafOfWindow: 4.6/12,
     }),
     async mounted () {
       await login();

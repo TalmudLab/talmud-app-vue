@@ -1,13 +1,52 @@
 <template>
   <div class="w-full">
-    {{trees.length}}
+    <div v-for="(render, i) in sentences"
+         class="flex flex-row h-15 mb-1"
+         :class="{'bg-blue-100': selectedIndex == render.renderIndex}"
+          @click="sentenceClicked(render)">
+      <template v-if="render.indent.value > 1">
+        <div v-for="i in render.indent.value - 1"
+          class="w-4">
+        </div>
+      </template>
+      <template v-if="render.indent.value">
+        <div
+          class="w-2">
+        </div>
+        <div
+          :style="{marginTop: '-.9rem', height: '2.94rem'}"
+          class="w-0.5 bg-gray-400">
+        </div>
+        <div
+             class="w-2 h-0.5 bg-gray-400 self-center">
+        </div>
+      </template>
+      <div class="h-12 w-16 mt-2 bg-gray-100 border-gray-400 border-2 rounded-sm">
+
+      </div>
+      <div class="h-16 w-16 flex flex-col ml-1">
+        <div v-for="rashi in render.sentence.onPage.rashi"
+             :style="{marginBottom: '1px'}"
+          class="h-4 w-full bg-red-200 border-2 rounded-sm border-red-500">
+          <div class="commentary-text">Rashi</div>
+        </div>
+      </div>
+
+      <div class="h-16 w-16 flex flex-col ml-1">
+        <div v-for="tosafot in render.sentence.onPage.tosafot"
+             class="h-4 w-full bg-red-200 border-2 rounded-sm border-red-500">
+          <div class="commentary-text">Tosafot</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 
 import {defineComponent, PropType, toRaw} from "vue";
-import {sentence, sentenceRender} from "../state/sentences";
+import {sentenceRender, sentenceData } from "../state/types";
+import {selectSentence, selectCommentary} from "../state/actions";
 
 type node = {
   parent: node | undefined
@@ -21,6 +60,7 @@ type row = {
   nodes: Array<node>,
   childRows: Array<row>
 }
+
 
 export default defineComponent({
   props: {
@@ -37,6 +77,11 @@ export default defineComponent({
       return payload.index >= 0;
     }
   },
+  methods: {
+    sentenceClicked(render: sentenceRender) {
+      selectSentence(render.sentence.daf, render.sentence.index);
+    }
+  },
   computed: {
     trees () : Array<node> {
       if (!Array.isArray(this.sentences)) return [];
@@ -45,9 +90,9 @@ export default defineComponent({
         const children = [];
         const parentSR: sentenceRender = parent.sentenceRender;
         for (let currIndex = parentSR.renderIndex + 1, curr: sentenceRender | undefined;
-             currIndex < this.sentences!.length && (curr = this.sentences!.find(sr => sr.renderIndex == currIndex)) && curr.indent > parentSR.indent;
+             currIndex < this.sentences!.length && (curr = this.sentences!.find(sr => sr.renderIndex == currIndex)) && curr.indent.value > parentSR.indent.value;
              currIndex++) {
-          if (curr.indent == parentSR.indent + 1) {
+          if (curr.indent.value == parentSR.indent.value + 1) {
             const newNode: node = {
               parent,
               index: children.length,
@@ -61,7 +106,7 @@ export default defineComponent({
         return children;
       }
 
-      const atRoot = this.sentences.filter(sentence => sentence.indent == 0)
+      const atRoot = this.sentences.filter(sentence => sentence.indent.value == 0)
       atRoot.forEach( (sentenceRender, index) => {
         const newNode: node = {
           parent: undefined,
@@ -73,89 +118,15 @@ export default defineComponent({
         roots.push(newNode)
       })
       return roots;
-    }
-    // rows(): Array<row> {
-    //   if (this.sentences) {
-    //     const rows: Array<row> = [];
-    //     const atRoot = this.sentences.filter(sentence => sentence.indent == 0)
-    //     atRoot.forEach(sentenceRender => {
-    //       let parentIndex = null
-    //       // if (sentenceRender.renderIndex != 0) {
-    //       //   const prev = this.sentences.find(render => render.renderIndex == sentenceRender.renderIndex - 1);
-    //       //   if ()
-    //       // }
-    //
-    //       const newNode: node = {
-    //         sentenceRender,
-    //         index: 0
-    //       }
-    //       const newRow = {
-    //         parentIndex,
-    //         nodes: [newNode],
-    //         childRows: [],
-    //       }
-    //       rows.push(newRow);
-    //     })
-    //
-    //     let level = 1;
-    //     let atLevel = Array.from(toRaw(this.sentences)).filter(sentence => sentence.indent == level);
-    //     while (atLevel.length) {
-    //       // atLevel.sort( (a, b) => a.renderIndex - b.renderIndex);
-    //       let placed = 0;
-    //       let group: Array<sentenceRender> = [];
-    //       atLevel.forEach( (sentenceRender, index) => {
-    //         if (group.length == 0 || group[group.length - 1].renderIndex == sentenceRender.renderIndex - 1) {
-    //           group.push(sentenceRender);
-    //           if (index != atLevel.length - 1) {
-    //             return;
-    //           }
-    //         }
-    //         //end last group and start new one. end last group:
-    //         const firstRenderIndex = group[0].renderIndex;
-    //         //find parent row & index within it
-    //         const isParent = (node: node) => node.sentenceRender.renderIndex == firstRenderIndex - 1;
-    //         const findParentRow = (rows: Array<row>): row | undefined => {
-    //           let found = rows.find(row => row.nodes.some(isParent));
-    //           if (found)
-    //             return found;
-    //           rows.forEach( row => {
-    //             const found = findParentRow(row.childRows);
-    //             if (found) return found;
-    //           })
-    //         }
-    //         const parentRow = findParentRow(rows);
-    //         const parentIndex = parentRow.nodes.findIndex(isParent);
-    //         //Create a node for each member of the group
-    //         const nodes: Array<node> = group.map((sentenceRender, index) => ({
-    //           sentenceRender,
-    //           index
-    //         }));
-    //         //Put the nodes in a row
-    //         const newRow: row = {
-    //           parentIndex,
-    //           nodes,
-    //           childRows: []
-    //         }
-    //         //Add the row to its parent
-    //         parentRow.childRows.push(newRow);
-    //
-    //         //start new group
-    //         group = [sentenceRender];
-    //       })
-    //       level++;
-    //       atLevel = this.sentences.filter(sentence => sentence.indent == level);
-    //       // if (level == 2)
-    //       //   debugger;
-    //     }
-    //     return rows;
-    //   }
-    //   return []
-    // }
+    },
   }
 })
 
 </script>
 
 <style scoped>
-
+.commentary-text {
+  margin-top: -0.3rem;
+  @apply text-sm
+}
 </style>
