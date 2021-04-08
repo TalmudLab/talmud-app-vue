@@ -8,7 +8,7 @@
          @mouseover="hovered = index"
          @mouseout="hovered = null"
          @click="$emit('selected', { sentence: render.sentence })"
-         :class="{'flex-row-reverse': !english}"
+         :class="{'highlighted': selectedIndex == index, 'flex-row-reverse': !english}"
     >
       <div class="flex-none flex items-center" :class="{'highlighted': selectedIndex == index, 'flex-row-reverse': !english}">
         <!--          <div :style="indenterStyles(index)"></div>-->
@@ -39,7 +39,7 @@
         <div v-if="expanded.has(index)" class="flex" :class="{'flex-row-reverse': !english}">
           <div class="flex flex-col" :class="{'flex-col-reverse': !english}">
             <div class="text-sm" v-html="render.sentence.en"></div>
-            <div class="rtl text-right" v-html="render.sentence.en"></div>
+            <div class="rtl text-right" v-html="render.sentence.he"></div>
           </div>
           <div class="self-start float-right">
             <a @click="expanded.delete(index)">
@@ -110,7 +110,7 @@ import {nextSentences, prevSentences} from "../state/actions";
            .sort( (a: sentenceRender, b: sentenceRender) => a.renderIndex - b.renderIndex)
            .map(sentenceRender => ({
              shortEn: shortenEnglish(sentenceRender.sentence.en),
-             shortHe: sentenceRender.sentence.he,
+             shortHe: sentenceRender.sentence.he.replaceAll("<br>", ""),
              indent: sentenceRender.indent.value,
              renderIndex: sentenceRender.renderIndex,
              sentence: sentenceRender.sentence
