@@ -26,8 +26,8 @@
         </a>
       </div>
     </div>
-    <NavListView v-if="list" :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavListView>
-    <NavMapView v-else :sentences="currentSentences" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavMapView>
+    <NavListView v-if="list" :sentences="currentSentenceRenders" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavListView>
+    <NavMapView v-else :sentences="currentSentenceRenders" :selected-index="selectedIndex" @selected="onSelected" :english="english"></NavMapView>
   </div>
 </template>
 
@@ -35,13 +35,16 @@
   import NavListView from "./NavListView.vue";
   import {defineComponent} from "vue";
   import NavMapView from "./NavMapView.vue";
-  import {currentDaf} from "../state/current";
+  import {currentDaf, currentSentenceRenders} from "../state/current";
   import {selectSentence} from "../state/actions";
+  import {sentenceData, sentenceRender} from "../state/types";
+  import {selectedSentence} from "../state/selections";
+  import {dafEquals} from "../utils/compare";
 
   export default defineComponent({
     components: {NavListView, NavMapView},
     setup() {
-      return { currentSentences, selectedSentence, selectSentence, currentDaf }
+      return { currentSentenceRenders, currentDaf, selectedSentence }
     },
     data: () => ({
       english: true,
@@ -49,18 +52,15 @@
     }),
     computed: {
       selectedIndex() {
-        if (selectedSentence && selectedSentence.tractate == currentDaf.tractate && selectedSentence.daf == currentDaf.daf) {
-          return selectedSentence.index;
+        if (Array.isArray(this.currentSentenceRenders) && this.selectedSentence.daf) {
+          return this.currentSentenceRenders.findIndex( (s: sentenceRender) => dafEquals(s.sentence.daf, this.selectedSentence.daf) && this.selectedSentence.index == s.sentence.index);
         }
         return -1;
       },
     },
     methods: {
-      onSelected ({index}: {index: number}) {
-        if (index != selectedSentence?.index) {
-          selectSentence({ , index);
-          console.log("reselect")
-        }
+      onSelected ({sentence}: {sentence: sentenceData}) {
+        selectSentence(sentence.daf, sentence.index);
       }
     }
   })

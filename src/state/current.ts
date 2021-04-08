@@ -22,7 +22,11 @@ export const currentDafData = computed(() => {
 startDaf = endDaf should really only happen when startIndex = 0. Regardless, if startDaf = endDaf, endIndex will
 be ignored.
  */
-export const currentSentenceRange = reactive<sentenceRange>({});
+export const currentSentenceRange = reactive<sentenceRange>({
+  startIndex: 0,
+  startDaf: currentDaf,
+  endDaf: currentDaf
+} as sentenceRange);
 
 
 export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
@@ -51,8 +55,8 @@ export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
     let renderCount = 0;
     const sentenceRenders = (sentenceDataArray: Array<sentenceData>, dafId: string): Array<sentenceRender> => sentenceDataArray.map( (sentenceData) => {
       let indent = toRef(sentenceIndents[dafId], sentenceData.index);
-      if (!indent) {
-        sentenceIndents[startDafId][sentenceData.index] = 1;
+      if (indent.value == undefined) {
+        sentenceIndents[startDafId][sentenceData.index] = 0;
         indent = toRef(sentenceIndents[dafId], sentenceData.index);
       }
       return {

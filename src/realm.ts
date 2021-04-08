@@ -50,7 +50,6 @@ type apiPage = {
 async function getPage(tractate: string, daf: string) : Promise<apiPage | undefined> {
   if (user) {
     const returned = await user.functions.getPagePlus(tractate, daf);
-    debugger;
     return returned;
   }
   else throw new Error("User wasn't logged in");
