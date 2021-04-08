@@ -35,7 +35,7 @@
   import NavListView from "./NavListView.vue";
   import {defineComponent} from "vue";
   import NavMapView from "./NavMapView.vue";
-  import {currentDaf, currentSentenceRenders} from "../state/current";
+  import {currentDaf, currentSentenceRenders, currentSentenceRange} from "../state/current";
   import {selectSentence} from "../state/actions";
   import {sentenceData, sentenceRender} from "../state/types";
   import {selectedSentence} from "../state/selections";
@@ -44,7 +44,7 @@
   export default defineComponent({
     components: {NavListView, NavMapView},
     setup() {
-      return { currentSentenceRenders, currentDaf, selectedSentence }
+      return { currentSentenceRenders, currentDaf, selectedSentence, currentSentenceRange }
     },
     data: () => ({
       english: true,

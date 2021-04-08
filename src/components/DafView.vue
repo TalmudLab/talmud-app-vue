@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, watch} from "vue";
+import {defineComponent, watch, nextTick} from "vue";
   import DafRenderer from "./DafRenderer.vue";
 import {
   selectedSentence, selectedCommentaries
@@ -31,17 +31,18 @@ const sentenceClass = {
     },
     setup (props) {
       const propsDaf = () => ({ tractate: props.tractate, daf: props.daf });
-      watch(selectedSentence, (sentence, prev) => {
-        if (dafEquals(sentence.daf, propsDaf())) {
+
+      const checkSelectedSentence = () => {
+        if (dafEquals(selectedSentence.daf, propsDaf())) {
           const main = document.querySelectorAll("." + sentenceClass.main);
           main.forEach(el => el.classList.remove('highlighted'));
-          if (main[sentence.index]) {
-            main[sentence.index].classList.add('highlighted');
+          if (main[selectedSentence.index]) {
+            main[selectedSentence.index].classList.add('highlighted');
           }
         }
-      })
+      }
 
-      watch(selectedCommentaries, (now, prev) => {
+      const checkSelectedCommentaries = () => {
         const wrappers = document.querySelectorAll(`.${sentenceClass.rashi}, .${sentenceClass.tosafot}`);
         wrappers.forEach(el => el.classList.remove('highlighted'));
         selectedCommentaries.forEach(commentary => {
@@ -51,7 +52,10 @@ const sentenceClass = {
             }
           }
         })
-      })
+      }
+      watch(selectedSentence, (sentence, prev) => checkSelectedSentence())
+
+      watch(selectedCommentaries, (now, prev) => checkSelectedCommentaries())
 
       const onRendered = () => {
         const main = document.querySelectorAll("." + sentenceClass.main);
@@ -95,6 +99,8 @@ const sentenceClass = {
       return {
         selectedSentence,
         onRendered,
+        checkSelectedSentence,
+        checkSelectedCommentaries
       }
     },
     data: () => ({
@@ -140,6 +146,11 @@ const sentenceClass = {
       async loadPage() {
         const page = await loadPage(this.tractate, this.daf);
         if (page) this.page = page;
+        await nextTick();
+        if (selectedSentence.index >= 0) {
+          this.checkSelectedSentence();
+          this.checkSelectedCommentaries();
+        }
       },
       onResize() {
         this.windowWidth = window.innerWidth;

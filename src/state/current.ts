@@ -2,6 +2,7 @@ import {computed, reactive, toRef} from "vue";
 import {dafId, loadedPages} from "./loaded";
 import {daf, sentenceData, sentenceRange, sentenceRender} from "./types";
 import {sentenceIndents} from "./user-data";
+import {dafEquals} from "../utils/daf";
 
 //TODO: only expose get/set, set should have validation
 export const currentDaf = reactive<daf>({
@@ -24,8 +25,8 @@ be ignored.
  */
 export const currentSentenceRange = reactive<sentenceRange>({
   startIndex: 0,
-  startDaf: currentDaf,
-  endDaf: currentDaf
+  startDaf: Object.assign({}, currentDaf),
+  endDaf: Object.assign({}, currentDaf)
 } as sentenceRange);
 
 
@@ -67,7 +68,7 @@ export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
     })
     const startSentenceRenders = sentenceRenders(startSentenceData, startDafId);
 
-    if (endDaf == startDaf) {
+    if (dafEquals(startDaf, endDaf)) {
       return startSentenceRenders;
     }
 

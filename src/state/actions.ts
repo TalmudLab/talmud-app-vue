@@ -71,10 +71,14 @@ export async function prevSentences() {
     currentSentenceRange.startIndex -= decreaseBy;
 }
 
-export function selectSentence(daf: daf, index: number) {
+export async function selectSentence(daf: daf, index: number) {
     selectedSentence.daf = daf;
     selectedSentence.index = index;
-    const pageData = loadedPages[dafId(daf.tractate, daf.daf)];
+    const pageData = await loadPage(daf.tractate, daf.daf);
+    if (!dafEquals(daf, currentDaf)) {
+      currentDaf.daf = daf.daf;
+      currentDaf.tractate = daf.tractate;
+    }
     if (pageData) {
         const onPage = pageData.main.sentences[index]?.onPage;
         if (onPage) {
