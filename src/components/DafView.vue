@@ -12,7 +12,7 @@ import {
 } from "../state/selections";
 import {apiPage, login}  from "../realm";
 import { loadPage, selectSentence, selectCommentary } from "../state/actions";
-import {dafEquals} from "../utils/compare";
+import {dafEquals} from "../utils/daf";
 
 const sentenceClass = {
     main: "sentence-main",

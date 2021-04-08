@@ -4,7 +4,7 @@ import {currentDaf, currentSentenceRange} from "./current";
 import {commentary, daf} from "./types";
 import {selectedCommentaries, selectedSentence} from "./selections";
 import {fromCommentaryRef} from "../utils/refs";
-import {dafEquals} from "../utils/compare";
+import {dafEquals, surrounding} from "../utils/daf";
 
 export async function loadPage(tractate: string | undefined, daf: string | undefined): Promise<page | undefined> {
     //TODO: Check validity of tractate/daf
@@ -23,23 +23,52 @@ export async function loadPage(tractate: string | undefined, daf: string | undef
 }
 
 export async function nextDaf() {
-    if (currentDaf.daf.includes('b')) {
-        currentDaf.daf = "" + (Number(currentDaf.daf.substring(0, currentDaf.daf.length - 1)) + 1);
-    } else {
-        currentDaf.daf += "b";
-    }
+    const next = surrounding(currentDaf).next;
+    currentDaf.daf = next.daf;
+    currentDaf.tractate = next.tractate;
     currentSentenceRange.startDaf = currentDaf;
     currentSentenceRange.endDaf = currentDaf;
 }
 
 export async function prevDaf() {
-    if (currentDaf.daf.includes('b')) {
-        currentDaf.daf = currentDaf.daf.substring(0, currentDaf.daf.length - 1);
-    } else {
-        currentDaf.daf = "" + (Number(currentDaf.daf) - 1) + "b";
-    }
+    const prev = surrounding(currentDaf).prev;
+    currentDaf.daf = prev.daf;
+    currentDaf.tractate = prev.tractate;
     currentSentenceRange.startDaf = currentDaf;
     currentSentenceRange.endDaf = currentDaf;
+}
+
+export async function nextSentences() {
+  debugger;
+    const increaseBy = 5;
+    const next = surrounding(currentSentenceRange.endDaf).next;
+    if (currentSentenceRange.endDaf == currentSentenceRange.startDaf) {
+        await loadPage(next.tractate, next.daf);
+        currentSentenceRange.endDaf = next;
+        currentSentenceRange.endIndex = increaseBy - 1;
+        return;
+    }
+    const currEnd = loadedPages[dafId(currentSentenceRange.endDaf.tractate, currentSentenceRange.endDaf.daf)];
+    if (currentSentenceRange.endIndex + increaseBy >= currEnd.main.sentences.length) {
+        await loadPage(next.tractate, next.daf);
+       currentSentenceRange.endDaf = next;
+       currentSentenceRange.endIndex = currentSentenceRange.endIndex + increaseBy - currEnd.main.sentences.length;
+       return;
+    }
+    currentSentenceRange.endIndex += increaseBy;
+}
+
+
+export async function prevSentences() {
+    const decreaseBy = 5;
+    const prev = surrounding(currentSentenceRange.startDaf).prev;
+    const prevData = await loadPage(prev.tractate, prev.daf);
+    if (currentSentenceRange.startIndex - decreaseBy < 0) {
+        currentSentenceRange.startDaf = prev;
+        currentSentenceRange.startIndex = prevData.main.sentences.length + (currentSentenceRange.startIndex - decreaseBy);
+        return;
+    }
+    currentSentenceRange.startIndex -= decreaseBy;
 }
 
 export function selectSentence(daf: daf, index: number) {

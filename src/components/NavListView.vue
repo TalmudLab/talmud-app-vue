@@ -1,5 +1,8 @@
 <template>
   <div ref="container" class="grid grid-cols-1 divide-y divide-gray-400">
+    <div v-if="renderList.length">
+      <a class="load-button" href="javascript:;" @click="loadPrevious">Load previous...</a>
+    </div>
     <div v-for="(render, index) in renderList" class="flex"
          :key="render.renderIndex"
          @mouseover="hovered = index"
@@ -54,12 +57,19 @@
         </div>
       </div>
       </div>
+    <div v-if="renderList.length">
+      <a class="load-button" href="javascript:;" @click="loadNext">Load next...</a>
+    </div>
+    <div v-else>
+      Loading...
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, onMounted, PropType, ref} from "vue";
 import {sentenceData, sentenceRender} from "../state/types";
+import {nextSentences, prevSentences} from "../state/actions";
   type renderInfo =  { shortEn: string, shortHe: string, renderIndex: number, indent: number, sentence: sentenceData }
   export default defineComponent({
     props: {
@@ -110,6 +120,12 @@ import {sentenceData, sentenceRender} from "../state/types";
       }
     },
     methods: {
+      loadPrevious() {
+        prevSentences();
+      },
+      loadNext() {
+        nextSentences();
+      },
       setDraggerRefs(el) {
         if (el) {
           this.draggerRefs.push(el);
@@ -177,5 +193,8 @@ import {sentenceData, sentenceRender} from "../state/types";
   }
   .text-gap {
     @apply text-xs text-gray-500 font-normal
+  }
+  .load-button {
+    @apply ml-4 text-sm font-bold text-blue-400 hover:text-blue-300
   }
 </style>

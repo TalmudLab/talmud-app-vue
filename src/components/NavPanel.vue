@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/3 mr-2">
+  <div class="w-1/3 mr-2 ml-2">
     <div class="
      flex flex-row items-center
      w-full px-2 h-9
@@ -39,7 +39,7 @@
   import {selectSentence} from "../state/actions";
   import {sentenceData, sentenceRender} from "../state/types";
   import {selectedSentence} from "../state/selections";
-  import {dafEquals} from "../utils/compare";
+  import {dafEquals} from "../utils/daf";
 
   export default defineComponent({
     components: {NavListView, NavMapView},
