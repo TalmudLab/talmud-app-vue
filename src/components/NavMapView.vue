@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div v-for="(render, i) in sentences"
-         class="flex flex-row h-15 mb-1"
+         class="flex flex-row h-15 pb-1"
          :class="{'bg-blue-100': selectedIndex == render.renderIndex}"
           @click="sentenceClicked(render)">
       <template v-if="render.indent.value > 1">
