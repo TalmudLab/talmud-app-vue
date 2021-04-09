@@ -3,7 +3,7 @@
     <div v-if="renderList.length">
       <a class="load-button" href="javascript:;" @click="loadPrevious">Load previous...</a>
     </div>
-    <div v-for="(render, index) in renderList" class="flex"
+    <div v-for="(render, index) in renderList" class="flex p-1.5"
          :key="render.renderIndex"
          @mouseover="hovered = index"
          @mouseout="hovered = null"
