@@ -117,8 +117,9 @@ const sentenceClass = {
     computed: {
       texts () {
         if (this.page?.main) {
-          const mainHTML: string = this.page.main.sentences
-            .map(mainSentence => mainSentence.he)
+          const mainHTML: string = this.page.main.lines
+            .join('<br>')
+            .split('|')
             .map(sentenceHTML => `<span class="${sentenceClass.main}">${sentenceHTML}</span> `)
             .join('');
           const headerRegex = /\{([^\{\}]+)\}/g;
