@@ -38,8 +38,8 @@
 
         <div v-if="expanded.has(index)" class="flex" :class="{'flex-row-reverse': !english}">
           <div class="flex flex-col" :class="{'flex-col-reverse': !english}">
-            <div class="text-sm" v-html="render.sentence.en"></div>
-            <div class="rtl text-right" v-html="render.sentence.he"></div>
+            <div v-if="english" class="text-sm" v-html="render.sentence.en"></div>
+            <div v-else class="rtl text-right" v-html="render.sentence.he"></div>
           </div>
           <div class="self-start float-right">
             <a @click="expanded.delete(index)">
