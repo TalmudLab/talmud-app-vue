@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-5/12 h-screen space-y-1">
+  <div class="flex flex-col w-5/12 h-screen overflow-scroll space-y-1">
     <div class="
      flex flex-row items-center
      w-full px-2 h-9

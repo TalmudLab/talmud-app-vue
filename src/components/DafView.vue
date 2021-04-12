@@ -36,8 +36,15 @@ const sentenceClass = {
         if (dafEquals(selectedSentence.daf, propsDaf())) {
           const main = document.querySelectorAll("." + sentenceClass.main);
           main.forEach(el => el.classList.remove('highlighted'));
-          if (main[selectedSentence.index]) {
-            main[selectedSentence.index].classList.add('highlighted');
+          const selectedEl = main[selectedSentence.index];
+          if (selectedEl) {
+            selectedEl.classList.add('highlighted');
+
+
+            const rect = selectedEl.getBoundingClientRect();
+            const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+            if((rect.bottom < 0 || rect.top - viewHeight >= 0))
+              selectedEl.scrollIntoView();
           }
         }
       }
