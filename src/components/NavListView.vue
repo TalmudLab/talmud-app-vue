@@ -70,6 +70,7 @@
 import {defineComponent, onMounted, PropType, ref} from "vue";
 import {sentenceData, sentenceRender} from "../state/types";
 import {nextSentences, prevSentences} from "../state/actions";
+import { currentDaf } from "../state/current";
   type renderInfo =  { shortEn: string, shortHe: string, renderIndex: number, indent: number, sentence: sentenceData }
   export default defineComponent({
     props: {
@@ -102,7 +103,8 @@ import {nextSentences, prevSentences} from "../state/actions";
       renderList (): Array<renderInfo> {
         if (this.sentences) {
           const shortenEnglish = (en: string) => {
-            return Array.from(en.matchAll(/<b>([^<>]+)<\/b>/g))
+            const matches = Array.from(en.matchAll(/<b>(.+?)<\/b>/g));
+            return matches
               .map(match => match[1])
               .join("<span class='text-gap'> - </span>")
           }
