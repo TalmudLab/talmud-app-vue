@@ -1,6 +1,7 @@
 <template>
   <div id="daf-container" :style="transformStyles">
     <DafRenderer :texts="texts" :amud="amud" @rendered="onRendered"></DafRenderer>
+    <span class="preload">preload</span>
   </div>
 </template>
 
@@ -26,10 +27,11 @@ const sentenceClass = {
       daf: String,
       scale: {
         type: Boolean,
-        default: true
+        default: false
       }
     },
     setup (props) {
+
       const propsDaf = () => ({ tractate: props.tractate, daf: props.daf });
 
       const checkSelectedSentence = () => {
@@ -107,7 +109,7 @@ const sentenceClass = {
         selectedSentence,
         onRendered,
         checkSelectedSentence,
-        checkSelectedCommentaries
+        checkSelectedCommentaries,
       }
     },
     data: () => ({
@@ -189,11 +191,19 @@ const sentenceClass = {
     background-color: #FECACA;
   }
 
+  .preload {
+    font-family: Vilna;
+    opacity: 0;
+  }
+
   .tosafot-header {
     font-family: Vilna;
     font-size: 135%;
+    vertical-align: bottom;
   }
+
   .tosafot-header:nth-of-type(odd) {
     font-size: 180%;
+    vertical-align: bottom;
   }
 </style>
