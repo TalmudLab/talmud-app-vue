@@ -27,7 +27,7 @@ const sentenceClass = {
       daf: String,
       scale: {
         type: Boolean,
-        default: true
+        default: false
       }
     },
     setup (props) {
@@ -142,6 +142,8 @@ const sentenceClass = {
           const headerRegex = /\{([^\{\}]+)\}/g;
           const rashiHTML: string = this.page.rashi.replaceAll(headerRegex, "<b class='rashi-header'>$1</b>");
           const tosafotHTML: string = this.page.tosafot.replaceAll(headerRegex, "<b class='tosafot-header'>$1</b>");
+
+
           return [mainHTML, rashiHTML, tosafotHTML];
         }
       },
