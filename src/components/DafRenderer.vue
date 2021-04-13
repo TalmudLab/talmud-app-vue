@@ -16,7 +16,7 @@
         default: "a"
       }
     },
-    emits: ['rendered'],
+    emits: ['rendered', 'resized'],
     setup (props, { attrs, slots, emit}) {
       const daf = ref(null);
       let renderer : dafRenderer;
@@ -24,8 +24,7 @@
       const renderPropsTexts = () => {
         if (props.texts?.length) {
           const [main, rashi, tosafot] : Array<string> = props.texts;
-          renderer.render(main, rashi, tosafot, props.amud, "br");
-          emit("rendered");
+          renderer.render(main, rashi, tosafot, props.amud, "br", () => emit("rendered"), () => emit("resized"));
         }
       }
 

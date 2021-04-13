@@ -1,12 +1,12 @@
 <template>
-  <div id="daf-container" :style="transformStyles">
-    <DafRenderer :texts="texts" :amud="amud" @rendered="onRendered"></DafRenderer>
+  <div id="daf-container" ref="dafContainer" :style="transformStyles">
+    <DafRenderer :texts="texts" :amud="amud" @rendered="onRendered" @resized="onResize"></DafRenderer>
     <span class="preload">preload</span>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, watch, nextTick} from "vue";
+import {defineComponent, watch, nextTick, ref} from "vue";
   import DafRenderer from "./DafRenderer.vue";
 import {
   selectedSentence, selectedCommentaries
@@ -27,13 +27,17 @@ const sentenceClass = {
       daf: String,
       scale: {
         type: Boolean,
-        default: false
+        default: true
       }
     },
     setup (props) {
 
       const propsDaf = () => ({ tractate: props.tractate, daf: props.daf });
+      const dafContainer = ref(null);
 
+      const rendered = ref(false);
+
+      window.addEventListener("resize", () => rendered.value = false)
       const checkSelectedSentence = () => {
         if (dafEquals(selectedSentence.daf, propsDaf())) {
           const main = document.querySelectorAll("." + sentenceClass.main);
@@ -67,6 +71,8 @@ const sentenceClass = {
       watch(selectedCommentaries, (now, prev) => checkSelectedCommentaries())
 
       const onRendered = () => {
+        console.log("got event")
+        rendered.value = true;
         const main = document.querySelectorAll("." + sentenceClass.main);
         main.forEach( (el, index) => el.addEventListener("click", () => {
           if (props.tractate && props.daf)
@@ -105,9 +111,12 @@ const sentenceClass = {
         document.querySelectorAll(".tosafot-header")
           .forEach( (firstHeader, index) => setupWrapper(firstHeader, "tosafot"));
       }
+
       return {
         selectedSentence,
+        dafContainer,
         onRendered,
+        rendered,
         checkSelectedSentence,
         checkSelectedCommentaries,
       }
@@ -121,7 +130,6 @@ const sentenceClass = {
     async mounted () {
       await login();
       this.loadPage();
-      window.addEventListener('resize', this.onResize)
     },
     computed: {
       texts () {
@@ -138,8 +146,9 @@ const sentenceClass = {
         }
       },
       transformStyles () {
-        if (!this.scale) return;
+        if (!this.scale || !this.rendered) return;
         const scale : number = (this.windowWidth * this.dafOfWindow) / (this.dafWidth);
+        console.log(scale);
         return {
           transform: `scale(${scale})`,
           'transform-origin': 'top left'
@@ -164,6 +173,7 @@ const sentenceClass = {
       },
       onResize() {
         this.windowWidth = window.innerWidth;
+        this.rendered = true;
       },
     },
     watch: {
