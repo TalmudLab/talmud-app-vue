@@ -43,7 +43,7 @@ const sentenceClass = {
 
             const rect = selectedEl.getBoundingClientRect();
             const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
-            if((rect.bottom < 0 || rect.top - viewHeight >= 0))
+            if(rect.top < 0 || rect.bottom - viewHeight >= 0)
               selectedEl.scrollIntoView();
           }
         }
