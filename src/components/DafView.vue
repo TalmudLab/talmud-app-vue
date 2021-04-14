@@ -1,6 +1,6 @@
 <template>
-  <div id="daf-container" ref="dafContainer" :style="transformStyles">
-    <DafRenderer :texts="texts" :amud="amud" @rendered="onRendered" @resized="onResize"></DafRenderer>
+  <div id="daf-container" ref="dafContainer">
+    <DafRenderer :style="transformStyles" :texts="texts" :amud="amud" @rendered="onRendered" @resized="onResize"></DafRenderer>
     <span class="preload">preload</span>
   </div>
 </template>
@@ -28,7 +28,7 @@ const sentenceClass = {
       daf: String,
       scale: {
         type: Boolean,
-        default: false
+        default: true
       }
     },
     setup (props) {
@@ -169,7 +169,11 @@ const sentenceClass = {
     methods: {
       async loadPage() {
         const page = await loadPage(this.tractate, this.daf);
-        if (page) this.page = page;
+        if (page) {
+          this.rendered = false;
+          await nextTick();
+          this.page = page;
+        }
         await nextTick();
         if (selectedSentence.index >= 0) {
           this.checkSelectedSentence();

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/3 h-screen overflow-auto mr-2 ml-3">
+  <div class="w-1/3 h-screen overflow-y-auto mr-2 ml-3">
     <div class="
      flex flex-row items-center
      w-full px-2 h-9

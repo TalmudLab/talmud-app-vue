@@ -51,4 +51,8 @@
     @apply text-xl
   }
 
+  .w-daf {
+    width: 660px;
+  }
+
 </style>

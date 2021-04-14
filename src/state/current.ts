@@ -34,7 +34,6 @@ export const currentSentenceRange = reactive<sentenceRange>({
 export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
   let {startDaf, endDaf, startIndex, endIndex} = currentSentenceRange;
   if (startDaf && endDaf) {
-    debugger;
     const startDafId = dafId(startDaf.tractate, startDaf.daf);
     const endDafId = dafId(endDaf.tractate, endDaf.daf);
     const startDafData = loadedPages[startDafId];
@@ -59,7 +58,7 @@ export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
     const sentenceRenders = (sentenceDataArray: Array<sentenceData>, dafId: string): Array<sentenceRender> => sentenceDataArray.map( (sentenceData) => {
       let indent = toRef(sentenceIndents[dafId], sentenceData.index);
       if (indent.value == undefined) {
-        sentenceIndents[startDafId][sentenceData.index] = 0;
+        sentenceIndents[dafId][sentenceData.index] = 0;
         indent = toRef(sentenceIndents[dafId], sentenceData.index);
       }
       return {
