@@ -1,8 +1,8 @@
 import {getPage, page} from "../realm";
 import {dafId, loadedPages} from "./loaded";
 import {currentDaf, currentSentenceRange} from "./current";
-import {commentary, daf} from "./types";
-import {selectedCommentaries, selectedSentence} from "./selections";
+import {commentary, daf, connection} from "./types";
+import {selectedCommentaries, selectedConnection, selectedSentence} from "./selections";
 import {fromCommentaryRef} from "../utils/refs";
 import {dafEquals, surrounding} from "../utils/daf";
 
@@ -73,6 +73,15 @@ export async function prevSentences() {
     return;
   }
   currentSentenceRange.startIndex -= decreaseBy;
+}
+
+export function selectConnection(connection: connection) {
+  Object.keys(connection).forEach(key => selectedConnection[key] = connection[key]);
+}
+
+
+export function clearConnection() {
+  Object.keys(selectedConnection).forEach(key => selectedConnection[key] = undefined);
 }
 
 export async function selectSentence(daf: daf, index: number) {

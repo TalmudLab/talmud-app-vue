@@ -75,12 +75,9 @@ export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
 
     const endDafSentences = endIndex == undefined ? endDafData.main.sentences : endDafData.main.sentences.slice(0, endIndex);
 
-    const endSentenceData: Array<sentenceData> = endDafSentences.map( (sentence, i) => ({
-      he: sentence.he,
-      en: sentence.en,
-      onPage: sentence.onPage,
+    const endSentenceData: Array<sentenceData> = endDafSentences.map( (sentence, i) => Object.assign({}, sentence, {
       index: i,
-      daf: endDaf,
+      daf: endDaf
     }));
 
     if (!sentenceIndents[endDafId]) {

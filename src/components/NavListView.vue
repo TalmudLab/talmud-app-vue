@@ -70,7 +70,6 @@
 import {defineComponent, onMounted, PropType, ref} from "vue";
 import {sentenceData, sentenceRender} from "../state/types";
 import {nextSentences, prevSentences} from "../state/actions";
-import { currentDaf } from "../state/current";
   type renderInfo =  { shortEn: string, shortHe: string, renderIndex: number, indent: number, sentence: sentenceData }
   export default defineComponent({
     props: {

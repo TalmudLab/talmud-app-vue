@@ -28,4 +28,12 @@ export type indents = {
   [index: number]: number
 }
 
+export type connection = {
+  title: string,
+  author: string,
+  type: "modern",
+  text: string,
+  link: string
+}
+
 export type commentary = "rashi" | "tosafot";

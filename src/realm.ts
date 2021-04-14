@@ -1,4 +1,5 @@
 import * as Realm from "realm-web";
+import {connection} from "./state/types";
 
 const app: Realm.App = new Realm.App({ id: "talmudapi-lfaxp" });
 let user: Realm.User | null = null;
@@ -32,8 +33,10 @@ type mainSentence = {
   onPage: {
     rashi: undefined | Array<{index: number, ref: string}>,
     tosafot: undefined | Array<{index: number, ref: string}>,
-  }
+  },
+  connections: Array<connection>
 }
+
 type apiPage = {
   tractate: string,
   daf: string

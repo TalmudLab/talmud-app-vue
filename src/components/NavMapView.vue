@@ -38,6 +38,19 @@
           <div class="commentary-text">Tosafot</div>
         </div>
       </div>
+
+      <div class="h-16 w-16">
+
+      </div>
+
+      <div class="h-16 w-16 flex flex-col ml-1">
+        <div v-for="modern in render.sentence.connections"
+             class="h-9 w-full  bg-yellow-200 border-2 rounded-sm border-yellow-500"
+             @click="event => connectionClicked(event, modern)"
+        >
+          <div class="commentary-text">{{modern.author}}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +59,12 @@
 
 import {defineComponent, PropType, toRaw} from "vue";
 import {sentenceRender, sentenceData } from "../state/types";
-import {selectSentence, selectCommentary} from "../state/actions";
+import {
+  selectSentence,
+  selectCommentary,
+  selectConnection, clearConnection
+} from "../state/actions";
+import {selectedConnection} from "../state/selections";
 
 type node = {
   parent: node | undefined
@@ -71,15 +89,14 @@ export default defineComponent({
       default: true
     },
   },
-  emits: {
-    selected(payload: { index: number }) {
-      // perform runtime validation
-      return payload.index >= 0;
-    }
-  },
   methods: {
     sentenceClicked(render: sentenceRender) {
       selectSentence(render.sentence.daf, render.sentence.index);
+      clearConnection();
+    },
+    connectionClicked(event, commentary) {
+      selectConnection(commentary);
+      event.stopPropagation();
     }
   },
   computed: {
