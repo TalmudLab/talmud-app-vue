@@ -3,11 +3,12 @@ import {dafId, loadedPages} from "./loaded";
 import {daf, sentenceData, sentenceRange, sentenceRender} from "./types";
 import {sentenceIndents} from "./user-data";
 import {dafEquals} from "../utils/daf";
+import {loadPage} from "./actions";
 
 //TODO: only expose get/set, set should have validation
 export const currentDaf = reactive<daf>({
   tractate: "Berakhot",
-  daf: "31b"
+  daf: "31"
 });
 
 export const currentDafData = computed(() => {
@@ -24,15 +25,16 @@ startDaf = endDaf should really only happen when startIndex = 0. Regardless, if 
 be ignored.
  */
 export const currentSentenceRange = reactive<sentenceRange>({
-  startIndex: 0,
-  startDaf: Object.assign({}, currentDaf),
-  endDaf: Object.assign({}, currentDaf)
+  startIndex: 20,
+  startDaf: {tractate: "Berakhot", daf: "31"},
+  endDaf: {tractate: "Berakhot", daf: "31b"},
+  endIndex: 12
 } as sentenceRange);
-
 
 export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
   let {startDaf, endDaf, startIndex, endIndex} = currentSentenceRange;
   if (startDaf && endDaf) {
+    debugger;
     const startDafId = dafId(startDaf.tractate, startDaf.daf);
     const endDafId = dafId(endDaf.tractate, endDaf.daf);
     const startDafData = loadedPages[startDafId];

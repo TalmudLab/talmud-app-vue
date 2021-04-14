@@ -14,6 +14,7 @@ import {
 import {apiPage, login}  from "../realm";
 import { loadPage, selectSentence, selectCommentary } from "../state/actions";
 import {dafEquals} from "../utils/daf";
+import {currentSentenceRange} from "../state/current";
 
 const sentenceClass = {
     main: "sentence-main",
@@ -130,6 +131,8 @@ const sentenceClass = {
     async mounted () {
       await login();
       this.loadPage();
+      loadPage(currentSentenceRange.startDaf.tractate, currentSentenceRange.startDaf.daf);
+      loadPage(currentSentenceRange.endDaf.tractate, currentSentenceRange.endDaf.daf);
     },
     computed: {
       texts () {

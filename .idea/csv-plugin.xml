@@ -38,6 +38,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\src\state\actions.ts">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\src\state\current.ts">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\src\state\daf.ts">
           <value>
             <Attribute>
