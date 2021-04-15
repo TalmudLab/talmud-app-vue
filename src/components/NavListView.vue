@@ -3,7 +3,7 @@
     <div v-if="renderList.length">
       <a class="load-button" href="javascript:;" @click="loadPrevious">Load previous...</a>
     </div>
-    <div v-for="(render, index) in renderList" class="flex p-1.5"
+    <div v-for="(render, index) in renderList" class="sentence-line flex p-1.5"
          :key="render.renderIndex"
          @mouseover="hovered = index"
          @mouseout="hovered = null"
@@ -94,6 +94,17 @@ import {nextSentences, prevSentences} from "../state/actions";
       dropClass: "dropzone",
       expanded: new Set(),
     }),
+    watch: {
+      selectedIndex(newIndex, oldIndex) {
+        const el = this.container.querySelectorAll(".sentence-line")[newIndex];
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+          if(rect.top < 0 || rect.bottom - viewHeight >= 0)
+            el.scrollIntoView();
+        }
+      }
+    },
     setup () {
       const container = ref(null);
       return { container };
