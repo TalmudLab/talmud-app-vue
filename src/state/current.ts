@@ -2,7 +2,7 @@ import {computed, reactive, toRef} from "vue";
 import {dafId, loadedPages} from "./loaded";
 import {daf, sentenceData, sentenceRange, sentenceRender} from "./types";
 import {sentenceIndents} from "./user-data";
-import {dafEquals} from "../utils/daf";
+import {dafEquals, dafsBetween} from "../utils/daf";
 import {loadPage} from "./actions";
 
 //TODO: only expose get/set, set should have validation
@@ -73,6 +73,30 @@ export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
       return startSentenceRenders;
     }
 
+    const toReturn = [...startSentenceRenders];
+
+    for (const daf of dafsBetween(startDaf, endDaf)) {
+      const id = dafId(daf.tractate, daf.daf);
+      const data = loadedPages[id]
+      if (!data) {
+        /*
+          throw an exception? this shouldn't ever happen, as we already checked whether endDaf is loaded,
+          so this would imply that there's a gap in the middle
+         */
+        break;
+      }
+      const sentences = data.main.sentences;
+      const sentenceData = sentences.map( (sentence, index) => Object.assign({}, sentence, {
+        index,
+        daf
+      }))
+
+      if (!sentenceIndents[id]) {
+        sentenceIndents[id] = {};
+      }
+      toReturn.push(...sentenceRenders(sentenceData, id))
+    }
+
     const endDafSentences = endIndex == undefined ? endDafData.main.sentences : endDafData.main.sentences.slice(0, endIndex);
 
     const endSentenceData: Array<sentenceData> = endDafSentences.map( (sentence, i) => Object.assign({}, sentence, {
@@ -85,7 +109,8 @@ export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
     }
 
     const endSentenceRenders = sentenceRenders(endSentenceData, endDafId);
-    return startSentenceRenders.concat(endSentenceRenders);
+    toReturn.push(...endSentenceRenders);
+    return toReturn;
   }
   return [];
 })

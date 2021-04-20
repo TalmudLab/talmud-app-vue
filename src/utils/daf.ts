@@ -14,20 +14,31 @@ export function surrounding(daf: daf): {prev: daf, next: daf} {
     tractate: daf.tractate,
     daf: ""
   }
-  if (currentDaf.daf.includes('b')) {
-    nextDaf.daf = "" + (Number(currentDaf.daf.substring(0, currentDaf.daf.length - 1)) + 1);
+  if (daf.daf.includes('b')) {
+    nextDaf.daf = "" + (Number(currentDaf.daf.substring(0, daf.daf.length - 1)) + 1);
   } else {
-    nextDaf.daf = currentDaf.daf + "b";
+    nextDaf.daf = daf.daf + "b";
   }
 
-  if (currentDaf.daf.includes('b')) {
-    prevDaf.daf = currentDaf.daf.substring(0, currentDaf.daf.length - 1);
+  if (daf.daf.includes('b')) {
+    prevDaf.daf = daf.daf.substring(0, daf.daf.length - 1);
   } else {
-    prevDaf.daf = "" + (Number(currentDaf.daf) - 1) + "b";
+    prevDaf.daf = "" + (Number(daf.daf) - 1) + "b";
   }
 
   return {
     prev: prevDaf,
     next: nextDaf
   }
+}
+
+export function dafsBetween(start: daf, end: daf): Array<daf> {
+  debugger;
+  if (dafEquals(start, end)) return [];
+  const between = [];
+  let curr = start;
+  while (!dafEquals(curr = surrounding(curr).next, end)) {
+    between.push(curr)
+  }
+  return between;
 }
