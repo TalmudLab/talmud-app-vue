@@ -32,6 +32,7 @@ export async function nextDaf() {
   currentDaf.tractate = next.tractate;
   currentSentenceRange.startDaf = currentDaf;
   currentSentenceRange.endDaf = currentDaf;
+  currentSentenceRange.startIndex = 0;
 }
 
 export async function prevDaf() {
@@ -40,10 +41,10 @@ export async function prevDaf() {
   currentDaf.tractate = prev.tractate;
   currentSentenceRange.startDaf = currentDaf;
   currentSentenceRange.endDaf = currentDaf;
+  currentSentenceRange.startIndex = 0;
 }
 
 export async function nextSentences() {
-  debugger;
   const increaseBy = 5;
   const next = surrounding(currentSentenceRange.endDaf).next;
   if (currentSentenceRange.endDaf == currentSentenceRange.startDaf) {
