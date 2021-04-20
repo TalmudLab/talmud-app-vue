@@ -1,5 +1,8 @@
 import {daf} from "../state/types";
-import {currentDaf} from "../state/current";
+
+export function dafId(tractate: string, daf: string): string {
+  return tractate + daf;
+}
 
 export function dafEquals(daf1: daf, daf2: daf) {
   return daf1.tractate == daf2.tractate && daf1.daf == daf2.daf;
@@ -41,3 +44,4 @@ export function dafsBetween(start: daf, end: daf): Array<daf> {
   }
   return between;
 }
+

@@ -1,8 +1,8 @@
 import {computed, reactive, toRef} from "vue";
-import {dafId, loadedPages} from "./loaded";
+import {loadedPages} from "./loaded";
 import {daf, sentenceData, sentenceRange, sentenceRender} from "./types";
 import {sentenceIndents} from "./user-data";
-import {dafEquals, dafsBetween} from "../utils/daf";
+import {dafEquals, dafId, dafsBetween} from "../utils/daf";
 import {loadPage} from "./actions";
 
 //TODO: only expose get/set, set should have validation

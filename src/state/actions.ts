@@ -1,10 +1,10 @@
 import {getPage, page} from "../realm";
-import {dafId, loadedPages} from "./loaded";
+import {loadedPages} from "./loaded";
 import {currentDaf, currentSentenceRange} from "./current";
 import {commentary, daf, connection} from "./types";
 import {selectedCommentaries, selectedConnection, selectedSentence} from "./selections";
 import {fromCommentaryRef} from "../utils/refs";
-import {dafEquals, surrounding} from "../utils/daf";
+import {dafEquals, dafId, surrounding} from "../utils/daf";
 
 export async function loadPage(tractate: string | undefined, daf: string | undefined): Promise<page | undefined> {
   //TODO: Check validity of tractate/daf
