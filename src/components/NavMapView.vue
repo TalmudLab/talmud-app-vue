@@ -14,14 +14,14 @@
           class="w-2">
         </div>
         <div
-          :style="{marginTop: '-.9rem', height: '2.94rem'}"
-          class="w-0.5 bg-gray-400">
+          :style="{marginTop: '-2.45rem', height: '4.5rem'}"
+          class="w-0.5 bg-gray-400 z-0">
         </div>
         <div
              class="w-2 h-0.5 bg-gray-400 self-center">
         </div>
       </template>
-      <div class="h-12 w-16 mt-2 bg-gray-100 border-gray-400 border-2 rounded-sm">
+      <div class="h-12 w-16 mt-2 bg-gray-100 border-gray-400 border-2 rounded-sm z-10">
 
       </div>
       <div class="h-16 w-16 flex flex-col ml-1">
