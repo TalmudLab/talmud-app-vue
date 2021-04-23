@@ -36,13 +36,13 @@
       <div
         :style="{width: `calc(96% - ${render.indent + (dragging == index)}*1rem)`}">
 
-        <div v-if="expanded.has(render)" class="flex" :class="{'flex-row-reverse': !english}">
+        <div v-if="expanded.has(render.sentenceId)" class="flex" :class="{'flex-row-reverse': !english}">
           <div class="flex flex-col" :class="{'flex-col-reverse': !english}">
             <div v-if="english" class="text-sm" v-html="render.sentence.en"></div>
             <div v-else class="rtl text-right" v-html="render.sentence.he"></div>
           </div>
           <div class="self-start float-right">
-            <a @click="expanded.delete(render)">
+            <a @click="expanded.delete(render.sentenceId)">
               <i class="fas text-xl fa-caret-down"></i>
             </a>
           </div>
@@ -51,7 +51,7 @@
              :class="{'flex-row-reverse': !english}">
           <div class="text-sm flex-grow font-semibold truncate" :class="{rtl: !english}" v-html="english ? render.shortEn : render.shortHe">
           </div>
-          <a v-show="hovered == index" @click="expanded.add(render)">
+          <a v-show="hovered == index" @click="expanded.add(render.sentenceId)">
             <i class="fas text-xl"  :class="[english ? 'fa-caret-right' : 'fa-caret-left']"></i>
           </a>
         </div>
@@ -70,7 +70,8 @@
 import {defineComponent, onMounted, PropType, ref} from "vue";
 import {sentenceData, sentenceRender} from "../state/types";
 import {nextSentences, prevSentences} from "../state/actions";
-  type renderInfo =  { shortEn: string, shortHe: string, renderIndex: number, indent: number, sentence: sentenceData }
+import {dafId} from "../utils/daf";
+  type renderInfo =  { shortEn: string, shortHe: string, renderIndex: number, indent: number, sentence: sentenceData, sentenceId: string}
   export default defineComponent({
     props: {
       sentences: Array as PropType<Array<sentenceRender>>,
@@ -125,7 +126,8 @@ import {nextSentences, prevSentences} from "../state/actions";
              shortHe: sentenceRender.sentence.he.replaceAll("<br>", ""),
              indent: sentenceRender.indent.value,
              renderIndex: sentenceRender.renderIndex,
-             sentence: sentenceRender.sentence
+             sentence: sentenceRender.sentence,
+             sentenceId: dafId(sentenceRender.sentence.daf.daf, sentenceRender.sentence.daf.tractate) + sentenceRender.sentence.index
            }));
         }
         return []
