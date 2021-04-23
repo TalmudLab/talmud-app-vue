@@ -1,7 +1,7 @@
 import {daf} from "../state/types";
 
-export function dafId(tractate: string, daf: string): string {
-  return tractate + daf;
+export function dafId(daf: daf): string {
+  return daf.tractate + daf.daf;
 }
 
 export function dafEquals(daf1: daf, daf2: daf) {

@@ -12,7 +12,7 @@ export const currentDaf = reactive<daf>({
 });
 
 export const currentDafData = computed(() => {
-  const id = dafId(currentDaf.tractate, currentDaf.daf);
+  const id = dafId(currentDaf.tractate);
   if (loadedPages[id]) {
     return loadedPages[id];
   } else {
@@ -34,8 +34,8 @@ export const currentSentenceRange = reactive<sentenceRange>({
 export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
   let {startDaf, endDaf, startIndex, endIndex} = currentSentenceRange;
   if (startDaf && endDaf) {
-    const startDafId = dafId(startDaf.tractate, startDaf.daf);
-    const endDafId = dafId(endDaf.tractate, endDaf.daf);
+    const startDafId = dafId(startDaf);
+    const endDafId = dafId(endDaf);
     const startDafData = loadedPages[startDafId];
     const endDafData = loadedPages[endDafId];
     if (!startDafData || !endDafData)
@@ -76,7 +76,7 @@ export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
     const toReturn = [...startSentenceRenders];
 
     for (const daf of dafsBetween(startDaf, endDaf)) {
-      const id = dafId(daf.tractate, daf.daf);
+      const id = dafId(daf);
       const data = loadedPages[id]
       if (!data) {
         /*

@@ -9,7 +9,7 @@ import {dafEquals, dafId, surrounding} from "../utils/daf";
 export async function loadPage(tractate: string | undefined, daf: string | undefined): Promise<page | undefined> {
   //TODO: Check validity of tractate/daf
   if (tractate && daf) {
-    const id = dafId(tractate, daf);
+    const id = dafId({tractate, daf});
     const alreadyLoaded = loadedPages[id];
     if (alreadyLoaded) {
       return alreadyLoaded;
@@ -53,7 +53,7 @@ export async function nextSentences() {
     currentSentenceRange.endIndex = increaseBy - 1;
     return;
   }
-  const currEnd = loadedPages[dafId(currentSentenceRange.endDaf.tractate, currentSentenceRange.endDaf.daf)];
+  const currEnd = loadedPages[dafId(currentSentenceRange.endDaf)];
   if (currentSentenceRange.endIndex + increaseBy >= currEnd.main.sentences.length) {
     await loadPage(next.tractate, next.daf);
     currentSentenceRange.endDaf = next;
@@ -117,7 +117,7 @@ export async function selectSentence(daf: daf, index: number) {
 
 export function selectCommentary(daf: daf, index: number, text: commentary) {
   if (daf.tractate && daf.daf) {
-    const ref = loadedPages[dafId(daf.tractate, daf.daf)][text + "Refs"][index];
+    const ref = loadedPages[dafId(daf)][text + "Refs"][index];
 
     const refData = fromCommentaryRef(ref);
 

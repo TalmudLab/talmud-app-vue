@@ -127,7 +127,7 @@ import {dafId} from "../utils/daf";
              indent: sentenceRender.indent.value,
              renderIndex: sentenceRender.renderIndex,
              sentence: sentenceRender.sentence,
-             sentenceId: dafId(sentenceRender.sentence.daf.daf, sentenceRender.sentence.daf.tractate) + sentenceRender.sentence.index
+             sentenceId: dafId(sentenceRender.sentence.daf) + sentenceRender.sentence.index
            }));
         }
         return []
