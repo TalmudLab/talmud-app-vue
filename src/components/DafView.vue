@@ -137,12 +137,13 @@ const sentenceClass = {
     computed: {
       texts () {
         if (this.page?.main) {
+          const headerRegex = /\{([^\{\}]+)\}/g;
           const mainHTML: string = this.page.main.lines
             .join('<br>')
             .split('|')
             .map(sentenceHTML => `<span class="${sentenceClass.main}">${sentenceHTML}</span> `)
-            .join('');
-          const headerRegex = /\{([^\{\}]+)\}/g;
+            .join('')
+            .replaceAll(headerRegex, "<b class='main-header'>$1</b>")
           const rashiHTML: string = this.page.rashi.replaceAll(headerRegex, "<b class='rashi-header'>$1</b>");
           const tosafotHTML: string = this.page.tosafot.replaceAll(headerRegex, "<b class='tosafot-header'>$1</b>");
 
@@ -215,7 +216,7 @@ const sentenceClass = {
     opacity: 0;
   }
 
-  .tosafot-header {
+  .tosafot-header, .main-header {
     font-family: Vilna;
     font-size: 135%;
     vertical-align: bottom;
