@@ -8,7 +8,7 @@ import {loadPage} from "./actions";
 //TODO: only expose get/set, set should have validation
 export const currentDaf = reactive<daf>({
   tractate: "Berakhot",
-  daf: "31"
+  daf: "30b"
 });
 
 export const currentDafData = computed(() => {

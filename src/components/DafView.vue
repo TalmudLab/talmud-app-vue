@@ -143,20 +143,43 @@ export default defineComponent({
       if (this.page?.main) {
         const headerRegex = /\{([^\{\}]+)\}/g;
         const hadran = "הדרן עלך"
+        const hadranRegex = new RegExp(`<br>[\\w\\s]*${hadran}[\\w\\s]*<br>`, 'g');
+
+        const hadranDiv = (text: "rashi" | "tosafot" | "main", html: string): string =>
+          `<div class="hadran"><span class="${sentenceClass[text]}">${html.replace("<br>", "")}</span></div>`
+
         const mainHTML: string = this.page.main.lines
           .join('<br>')
           .split('|')
           .map(sentenceHTML => {
             if (sentenceHTML.includes(hadran) && sentenceHTML.split(' ').length < 7) {
-              return `<div class="hadran"><span class="${sentenceClass.main} main-header"> ${sentenceHTML} </span></div>`
+              return hadranDiv("main", sentenceHTML);
             }
             return `<span class="${sentenceClass.main}">${sentenceHTML}</span>`
           })
           .join(' ')
           .replaceAll(headerRegex, "<b class='main-header'>$1</b>")
-        const rashiHTML: string = this.page.rashi.replaceAll(headerRegex, "<b class='rashi-header'>$1</b>");
-        const tosafotHTML: string = this.page.tosafot.replaceAll(headerRegex, "<b class='tosafot-header'>$1</b>");
+        const rashiHTML: string = this.page.rashi
+          .replaceAll(headerRegex, "<b class='rashi-header'>$1</b>")
+          .split('<br>')
+          .map(line => {
+            if (line.slice(0, hadran.length) == hadran) {
+              return hadranDiv("rashi", line);
+            }
+            return line;
+          })
+          .join('<br>')
 
+        const tosafotHTML: string = this.page.tosafot
+          .replaceAll(headerRegex, "<b class='tosafot-header'>$1</b>")
+          .split('<br>')
+          .map(line => {
+            if (line.slice(0, hadran.length) == hadran) {
+              return hadranDiv("tosafot", line);
+            }
+            return line;
+          })
+          .join('<br>')
 
         return [mainHTML, rashiHTML, tosafotHTML];
       }
@@ -214,6 +237,9 @@ export default defineComponent({
 div.hadran {
   display: flex;
   justify-content: center;
+  font-size: 135%;
+  font-family: Vilna;
+  transform: translateY(50%);
 }
 
 .hadran span {
@@ -237,7 +263,7 @@ div.hadran {
   opacity: 0;
 }
 
-.tosafot-header, .main-header {
+.tosafot-header {
   font-family: Vilna;
   font-size: 135%;
   vertical-align: bottom;
