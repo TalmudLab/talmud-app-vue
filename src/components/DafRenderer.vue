@@ -59,9 +59,6 @@
 
 <style scoped>
 
-  div {
-    text-align-last: justify;
-  }
   @font-face {
     font-family: Vilna;
     src: url(../assets/fonts/Mekorot-Vilna.ttf);

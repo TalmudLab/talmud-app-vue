@@ -231,8 +231,10 @@ export default defineComponent({
 </script>
 
 <style>
-#daf-container {
+#daf-container div {
+  text-align-last: justify !important;
 }
+
 
 div.hadran {
   display: flex;
