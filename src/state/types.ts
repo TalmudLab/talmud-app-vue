@@ -1,5 +1,5 @@
 import {Ref} from "vue";
-import {mainSentence} from "../realm";
+import {mainSentence} from "../fetch/realm";
 
 export type daf = {
   tractate: string,
@@ -33,7 +33,8 @@ export type connection = {
   author: string,
   type: "modern",
   text: string,
-  link: string
+  link: string,
+  ref?: string,
 }
 
 export type commentary = "rashi" | "tosafot";

@@ -8,11 +8,11 @@ import {loadPage} from "./actions";
 //TODO: only expose get/set, set should have validation
 export const currentDaf = reactive<daf>({
   tractate: "Berakhot",
-  daf: "30b"
+  daf: "31"
 });
 
 export const currentDafData = computed(() => {
-  const id = dafId(currentDaf.tractate);
+  const id = dafId(currentDaf);
   if (loadedPages[id]) {
     return loadedPages[id];
   } else {
@@ -31,6 +31,8 @@ export const currentSentenceRange = reactive<sentenceRange>({
   endIndex: 12
 } as sentenceRange);
 
+
+//TODO: refactor. there's a lot of duplicate code here
 export const currentSentenceRenders = computed<Array<sentenceRender>>( () => {
   let {startDaf, endDaf, startIndex, endIndex} = currentSentenceRange;
   if (startDaf && endDaf) {

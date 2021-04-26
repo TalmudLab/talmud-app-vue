@@ -1,5 +1,5 @@
 import * as Realm from "realm-web";
-import {connection} from "./state/types";
+import {connection} from "../state/types";
 
 const app: Realm.App = new Realm.App({ id: "talmudapi-lfaxp" });
 let user: Realm.User | null = null;

@@ -1,4 +1,4 @@
 import {reactive} from "vue";
-import {apiPage} from "../realm";
+import {apiPage} from "../fetch/realm";
 
 export const loadedPages = reactive<{[daf: string]: apiPage}>({});

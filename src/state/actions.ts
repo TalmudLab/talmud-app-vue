@@ -1,10 +1,11 @@
-import {getPage, page} from "../realm";
+import {getPage, page} from "../fetch/realm";
 import {loadedPages} from "./loaded";
 import {currentDaf, currentSentenceRange} from "./current";
 import {commentary, daf, connection} from "./types";
 import {selectedCommentaries, selectedConnection, selectedSentence} from "./selections";
 import {fromCommentaryRef} from "../utils/refs";
 import {dafEquals, dafId, surrounding} from "../utils/daf";
+import {getLinks} from "../fetch/sefaria";
 
 export async function loadPage(tractate: string | undefined, daf: string | undefined): Promise<page | undefined> {
   //TODO: Check validity of tractate/daf
@@ -16,6 +17,7 @@ export async function loadPage(tractate: string | undefined, daf: string | undef
     }
     try {
       const newlyLoadedPage = await getPage(tractate, daf);
+
       if (newlyLoadedPage) {
         loadedPages[id] = newlyLoadedPage;
         return newlyLoadedPage
@@ -23,6 +25,14 @@ export async function loadPage(tractate: string | undefined, daf: string | undef
     } catch {
       return null;
     }
+  }
+}
+
+export async function loadLinks(dafObj: daf) {
+  if (dafObj.tractate && dafObj.daf) {
+    const page = loadedPages[dafId(dafObj)];
+    if (!page) return;
+    const links = getLinks(dafObj);
   }
 }
 

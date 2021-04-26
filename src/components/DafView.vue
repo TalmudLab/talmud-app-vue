@@ -12,7 +12,7 @@ import DafRenderer from "./DafRenderer.vue";
 import {
   selectedSentence, selectedCommentaries
 } from "../state/selections";
-import {apiPage, login} from "../realm";
+import {apiPage, login} from "../fetch/realm";
 import {loadPage, selectSentence, selectCommentary} from "../state/actions";
 import {dafEquals} from "../utils/daf";
 import {currentSentenceRange} from "../state/current";

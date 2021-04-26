@@ -12,6 +12,7 @@ import TextPanel from "./components/TextPanel.vue";
 import NavPanel from "./components/NavPanel.vue";
 import ConnectionPanel from "./components/ConnectionPanel.vue";
 import {selectedConnection} from "./state/selections";
+import {getLinks} from "./fetch/sefaria";
 
 export default defineComponent({
   name: 'App',
@@ -24,6 +25,11 @@ export default defineComponent({
     return {
       selectedConnection
     }
+  },
+  async mounted () {
+    console.log("mega mounted");
+    const data = await getLinks({tractate: "Berakhot", daf: "31"});
+    console.log(data);
   }
 })
 </script>

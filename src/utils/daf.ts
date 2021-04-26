@@ -4,6 +4,11 @@ export function dafId(daf: daf): string {
   return daf.tractate + daf.daf;
 }
 
+export function dafToRef({tractate, daf}: daf): string {
+  const addA = daf.includes("b") ? "" : "a";
+  return `${tractate}.${daf}${addA}`;
+}
+
 export function dafEquals(daf1: daf, daf2: daf) {
   return daf1.tractate == daf2.tractate && daf1.daf == daf2.daf;
 }
