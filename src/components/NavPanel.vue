@@ -18,11 +18,11 @@
 
       <div class="text-sm">
         <a class="hover:font-bold cursor-pointer" :class="{'font-bold': list}" @click="list = true">
-          List
+          Main Text
         </a>
         /
         <a class="hover:font-bold cursor-pointer" :class="{'font-bold': !list}" @click="list = false">
-          Map
+          Commentary
         </a>
       </div>
     </div>
