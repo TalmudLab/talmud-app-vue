@@ -114,6 +114,9 @@ import {dafId} from "../utils/daf";
         if (this.sentences) {
           const shortenEnglish = (en: string) => {
             const matches = Array.from(en.matchAll(/<b>(.+?)<\/b>/g));
+            if (!matches.length) {
+              return en;
+            }
             return matches
               .map(match => match[1])
               .join("<span class='text-gap'> - </span>")
