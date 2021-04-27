@@ -31,7 +31,8 @@
           <div class="commentary-text">Rashi</div>
         </div>
         <div v-for="rashi in notOnPage(render.sentence, 'rashi')"
-             class="h-4 w-full bg-pink-200 border-2 rounded-sm border-pink-500">
+             class="h-4 w-full bg-pink-200 border-2 rounded-sm border-pink-500"
+             @click="event => connectionClicked(event, rashi)">
           <div class="commentary-text">Rashi</div>
         </div>
       </div>
@@ -42,13 +43,39 @@
           <div class="commentary-text">Tosafot</div>
         </div>
         <div v-for="tosafot in notOnPage(render.sentence, 'tosafot')"
-             class="h-4 w-full bg-pink-200 border-2 rounded-sm border-pink-500">
+             class="h-4 w-full bg-pink-200 border-2 rounded-sm border-pink-500"
+          @click="event => connectionClicked(event, tosafot)">
           <div class="commentary-text">Tosafot</div>
         </div>
       </div>
 
-      <div class="h-16 w-16">
+      <div v-if="render.sentence.connections" class="justify-self-end h-16 w-16 flex flex-col ml-1">
+        <div v-for="connection in render.sentence.connections.filter(connection => connection.type == 'tanakh')"
+             class="h-4 w-full  bg-purple-200 border-2 rounded-sm border-purple-500 truncate"
+             @click="event => connectionClicked(event, connection)"
+        >
+          <div class="commentary-text">{{connection.author}}</div>
+        </div>
+      </div>
 
+      <div v-if="render.sentence.connections" class="h-16 w-32 flex flex-col ml-1">
+        <div v-for="connection in render.sentence.connections.filter(connection => connection.type == 'traditional')"
+             class="h-4 w-full  bg-green-200 border-2 rounded-sm border-green-500"
+             @click="event => connectionClicked(event, connection)"
+        >
+          <div class="commentary-text">{{connection.author}}</div>
+        </div>
+      </div>
+
+
+
+      <div v-if="render.sentence.connections" class="justify-self-end h-16 w-16 flex flex-col ml-1">
+        <div v-for="connection in render.sentence.connections.filter(connection => connection.type == 'halakhah').slice(0, 4)"
+             class="h-4 w-full bg-gray-200 border-2 rounded-sm border-gray-700 truncate"
+             @click="event => connectionClicked(event, connection)"
+        >
+          <div class="commentary-text">{{connection.author}}</div>
+        </div>
       </div>
 
       <div v-if="render.sentence.connections" class="h-16 w-16 flex flex-col ml-1">

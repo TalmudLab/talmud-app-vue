@@ -31,7 +31,7 @@ export type indents = {
 export type connection = {
   title: string,
   author: string,
-  type: "modern" | "traditional" | "halakha" | "tanakh" | "rashi" | "tosafot",
+  type: "modern" | "traditional" | "halakhah" | "tanakh" | "rashi" | "tosafot",
   text: string,
   link: string,
   ref?: string,

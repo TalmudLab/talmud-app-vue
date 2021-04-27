@@ -5,7 +5,7 @@ import {commentary, daf, connection} from "./types";
 import {selectedCommentaries, selectedConnection, selectedSentence} from "./selections";
 import {fromCommentaryRef} from "../utils/refs";
 import {dafEquals, dafId, surrounding} from "../utils/daf";
-import {getLinks, linkToConnection} from "../fetch/sefaria";
+import {getLinks, linkToConnection, loadText} from "../fetch/sefaria";
 
 export async function loadPage(tractate: string | undefined, daf: string | undefined): Promise<page | undefined> {
   //TODO: Check validity of tractate/daf
@@ -101,6 +101,16 @@ export async function prevSentences() {
 
 export function selectConnection(connection: connection) {
   Object.keys(connection).forEach(key => selectedConnection[key] = connection[key]);
+  if (!connection.text && connection.ref) {
+    loadText(connection.ref).then(result => {
+      if (result.he) {
+        if (Array.isArray(result.he)) {
+          result.he = result.he.join("<br>");
+        }
+        connection.text = selectedConnection.text = `<div style="direction:rtl">${result.he}</div>`;
+      }
+    });
+  }
 }
 
 

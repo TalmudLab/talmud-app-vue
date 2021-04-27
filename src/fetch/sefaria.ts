@@ -48,7 +48,7 @@ function parseLink(daf: daf, linkObj): link  {
 
 function includeLink(link: link): boolean {
   if (link.category == "Tanakh") return true;
-  if (link.category == "Halakha") return true;
+  if (link.category == "Halakhah") return true;
   if (link.category == "Commentary") {
     if (Object.keys(commentaryIncludes).find(name => link.title.en.includes(name))) {
       return true;
@@ -65,10 +65,26 @@ export function getLinks(daf: daf): Promise<Array<link>> {
       if (err) {
         reject(err.message);
       } else {
+        debugger;
         resolve(data.links.map(obj => parseLink(daf, obj)).filter(includeLink));
       }
     }))
+}
 
+export function loadText(ref): Promise<{he: string, en: string}> {
+  const url = `https://www.sefaria.org/api/texts/${ref.replaceAll(' ', '_').replaceAll(':', '.')}`;
+  return new Promise( (resolve, reject) => {
+    jsonp(url, null, (err, data) => {
+      if (err) {
+        reject(err.message);
+      } else {
+        resolve({
+          he: data.he,
+          en: data.en,
+        })
+      }
+    });
+  });
 }
 
 export function linkToConnection(link: link): connection {
@@ -83,7 +99,7 @@ export function linkToConnection(link: link): connection {
   }
 
   return {
-    title: link.title.en,
+    title: link.ref,
     author: link.title.en,
     type,
     text: "",
