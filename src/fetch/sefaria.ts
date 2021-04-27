@@ -31,10 +31,10 @@ function parseLink(daf: daf, linkObj): link  {
   let sentenceIndexStart, sentenceIndexEnd;
   if (sentenceIndex.includes('-')) {
     const indices = sentenceIndex.split('-');
-    sentenceIndexStart = indices[0];
-    sentenceIndexEnd = indices[1];
+    sentenceIndexStart = indices[0] - 1;
+    sentenceIndexEnd = indices[1] - 1;
   } else {
-    sentenceIndexStart = sentenceIndex;
+    sentenceIndexStart = sentenceIndex - 1;
   }
   return {
     daf,

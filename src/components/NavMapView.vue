@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div v-for="(render, i) in sentences"
-         class="flex flex-row h-15 pb-1"
+         class="flex flex-row h-15 pb-1 border-b-2"
          :class="{'bg-blue-100': selectedIndex == render.renderIndex}"
           @click="sentenceClicked(render)">
       <template v-if="render.indent.value > 1">
@@ -30,11 +30,19 @@
           class="h-4 w-full bg-red-200 border-2 rounded-sm border-red-500">
           <div class="commentary-text">Rashi</div>
         </div>
+        <div v-for="rashi in notOnPage(render.sentence, 'rashi')"
+             class="h-4 w-full bg-pink-200 border-2 rounded-sm border-pink-500">
+          <div class="commentary-text">Rashi</div>
+        </div>
       </div>
 
       <div class="h-16 w-16 flex flex-col ml-1">
         <div v-for="tosafot in render.sentence.onPage.tosafot"
              class="h-4 w-full bg-red-200 border-2 rounded-sm border-red-500">
+          <div class="commentary-text">Tosafot</div>
+        </div>
+        <div v-for="tosafot in notOnPage(render.sentence, 'tosafot')"
+             class="h-4 w-full bg-pink-200 border-2 rounded-sm border-pink-500">
           <div class="commentary-text">Tosafot</div>
         </div>
       </div>
@@ -97,6 +105,17 @@ export default defineComponent({
     connectionClicked(event, commentary) {
       selectConnection(commentary);
       event.stopPropagation();
+    },
+    notOnPage(sentence: sentenceData, type: "rashi" | "tosafot") {
+      if (!sentence.connections) return [];
+      return sentence.connections.filter(connection => {
+        if (connection.type != type) return false;
+        const refConvert = (ref: string) => {
+          return ref.split(' ').slice(-2).join('.').replaceAll(':', '.');
+        }
+        if (sentence?.onPage?.[type]?.map(c => c.ref).includes(refConvert(connection.ref))) return false;
+        return true;
+      })
     }
   },
   computed: {
