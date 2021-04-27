@@ -10,7 +10,7 @@
         </a>
         /
         <a class="hover:font-bold cursor-pointer" :class="{'font-bold': !english}" @click="english = false">
-          Hebrew
+          Aramaic
         </a>
       </div>
 

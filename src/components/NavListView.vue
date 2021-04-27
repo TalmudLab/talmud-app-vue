@@ -36,7 +36,7 @@
         :style="{width: `calc(96% - ${render.indent + (dragging == index)}*1rem)`}">
 
         <div v-if="expanded.has(render.sentenceId)" class="flex" :class="{'flex-row-reverse': !english}">
-          <div class="flex flex-col" :class="{'flex-col-reverse': !english}">
+          <div class="flex flex-col flex-grow" :class="{'flex-col-reverse': !english}">
             <div v-if="english" class="text-sm" v-html="render.sentence.en"></div>
             <div v-else class="rtl text-right" v-html="render.sentence.he"></div>
           </div>
@@ -50,8 +50,8 @@
              :class="{'flex-row-reverse': !english}">
           <div class="text-sm flex-grow font-semibold truncate" :class="{rtl: !english}" v-html="english ? render.shortEn : render.shortHe">
           </div>
-          <a v-show="hovered == index" @click.stop="expanded.add(render.sentenceId)">
-            <i class="fas text-xl"  :class="[english ? 'fa-caret-right' : 'fa-caret-left']"></i>
+          <a :class="{'transform rotate-180': !english}" v-show="hovered == index" @click.stop="expanded.add(render.sentenceId)">
+            <i class="fas text-xl fa-caret-right"></i>
           </a>
         </div>
       </div>
