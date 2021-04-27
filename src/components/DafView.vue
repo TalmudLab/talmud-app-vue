@@ -171,6 +171,7 @@ export default defineComponent({
           .join('<br>')
 
         const tosafotHTML: string = this.page.tosafot
+          .replaceAll("} {", "}{")
           .replaceAll(headerRegex, "<b class='tosafot-header'>$1</b>")
           .split('<br>')
           .map(line => {

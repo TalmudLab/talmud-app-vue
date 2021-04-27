@@ -65,7 +65,6 @@ export function getLinks(daf: daf): Promise<Array<link>> {
       if (err) {
         reject(err.message);
       } else {
-        debugger;
         resolve(data.links.map(obj => parseLink(daf, obj)).filter(includeLink));
       }
     }))

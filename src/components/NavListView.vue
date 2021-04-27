@@ -23,7 +23,6 @@
             </span>
             <span v-show="hovered != index" class="text-lg">
             •
-
             </span>
           </div>
         </div>
