@@ -5,7 +5,7 @@ import {commentary, daf, connection} from "./types";
 import {selectedCommentaries, selectedConnection, selectedSentence} from "./selections";
 import {fromCommentaryRef} from "../utils/refs";
 import {dafEquals, dafId, surrounding} from "../utils/daf";
-import {getLinks} from "../fetch/sefaria";
+import {getLinks, linkToConnection} from "../fetch/sefaria";
 
 export async function loadPage(tractate: string | undefined, daf: string | undefined): Promise<page | undefined> {
   //TODO: Check validity of tractate/daf
@@ -20,6 +20,7 @@ export async function loadPage(tractate: string | undefined, daf: string | undef
 
       if (newlyLoadedPage) {
         loadedPages[id] = newlyLoadedPage;
+        loadLinks({tractate, daf});
         return newlyLoadedPage
       }
     } catch {
@@ -32,7 +33,19 @@ export async function loadLinks(dafObj: daf) {
   if (dafObj.tractate && dafObj.daf) {
     const page = loadedPages[dafId(dafObj)];
     if (!page) return;
-    const links = getLinks(dafObj);
+    const links = await getLinks(dafObj);
+    links.forEach( (link) => {
+      const sentence = page.main.sentences[link.sentenceIndexStart];
+
+      if (sentence) {
+        const connection = linkToConnection(link);
+        if (Array.isArray(sentence.connections)) {
+          sentence.connections.push(connection);
+        } else {
+          sentence.connections = [connection];
+        }
+      }
+    })
   }
 }
 
