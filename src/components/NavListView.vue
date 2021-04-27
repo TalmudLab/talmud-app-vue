@@ -7,7 +7,7 @@
          :key="render.renderIndex"
          @mouseover="hovered = index"
          @mouseout="hovered = null"
-         @click="$emit('selected', { sentence: render.sentence })"
+         @click="sentenceClicked(render)"
          :class="{'highlighted': selectedIndex == index, 'flex-row-reverse': !english}"
     >
       <div class="flex-none flex items-center" :class="{'highlighted': selectedIndex == index, 'flex-row-reverse': !english}">
@@ -134,6 +134,17 @@ import {dafId} from "../utils/daf";
       }
     },
     methods: {
+      sentenceClicked (render: renderInfo) {
+        if (this.selectedIndex == render.renderIndex) {
+          if (this.expanded.has(render.sentenceId)) {
+            this.expanded.delete(render.sentenceId);
+            return
+          }
+          this.expanded.add(render.sentenceId)
+          return;
+        }
+        this.$emit('selected', { sentence: render.sentence });
+      },
       loadPrevious() {
         prevSentences();
       },
