@@ -1,32 +1,19 @@
 <template>
-  <div class="w-full">
-    <div v-for="(render, i) in sentences"
-         class="flex flex-row h-15 pb-1 border-b-2"
+  <div class="w-full flex flex-row">
+
+    <SentenceBlocksCol :selected-index="selectedIndex" :sentences="sentences"></SentenceBlocksCol>
+
+    <!--TODO: Use CSS grid?-->
+    <div class="flex-grow flex flex-col">
+
+      <div v-for="(render, i) in sentences"
+         class="flex flex-row h-20 pb-1 border-b-2"
          :class="{'bg-blue-100': selectedIndex == render.renderIndex}"
           @click="sentenceClicked(render)">
-      <template v-if="render.indent.value > 1">
-        <div v-for="i in render.indent.value - 1"
-          class="w-4">
-        </div>
-      </template>
-      <template v-if="render.indent.value">
-        <div
-          class="w-2">
-        </div>
-        <div
-          :style="{marginTop: '-2.45rem', height: '4.5rem'}"
-          class="w-0.5 bg-gray-400 z-0">
-        </div>
-        <div
-             class="w-2 h-0.5 bg-gray-400 self-center">
-        </div>
-      </template>
-      <div class="h-12 w-16 mt-2 bg-gray-100 border-gray-400 border-2 rounded-sm z-10">
 
-      </div>
-      <div class="h-16 w-16 flex flex-col ml-1">
+        <!--TODO: DRY; make components-->
+      <div class="w-16 flex flex-col ml-1 space-y-1">
         <div v-for="rashi in render.sentence.onPage.rashi"
-             :style="{marginBottom: '1px'}"
           class="h-4 w-full bg-red-200 border-2 rounded-sm border-red-500">
           <div class="commentary-text">Rashi</div>
         </div>
@@ -37,7 +24,7 @@
         </div>
       </div>
 
-      <div class="h-16 w-16 flex flex-col ml-1">
+      <div class="w-16 flex flex-col ml-1">
         <div v-for="tosafot in render.sentence.onPage.tosafot"
              class="h-4 w-full bg-red-200 border-2 rounded-sm border-red-500">
           <div class="commentary-text">Tosafot</div>
@@ -49,7 +36,7 @@
         </div>
       </div>
 
-      <div v-if="render.sentence.connections" class="justify-self-end h-16 w-16 flex flex-col ml-1">
+      <div v-if="render.sentence.connections" class="w-16 flex flex-col ml-1 space-y-1">
         <div v-for="connection in render.sentence.connections.filter(connection => connection.type == 'tanakh')"
              class="h-4 w-full  bg-purple-200 border-2 rounded-sm border-purple-500 truncate"
              @click="event => connectionClicked(event, connection)"
@@ -58,9 +45,9 @@
         </div>
       </div>
 
-      <div v-if="render.sentence.connections" class="h-16 w-32 flex flex-col ml-1">
+      <div v-if="render.sentence.connections" class=" w-32 flex flex-col ml-1 space-y-1">
         <div v-for="connection in render.sentence.connections.filter(connection => connection.type == 'traditional')"
-             class="h-4 w-full  bg-green-200 border-2 rounded-sm border-green-500"
+             class="h-4 w-full bg-pink-200 border-2 rounded-sm border-pink-500 truncate"
              @click="event => connectionClicked(event, connection)"
         >
           <div class="commentary-text">{{connection.author}}</div>
@@ -69,9 +56,9 @@
 
 
 
-      <div v-if="render.sentence.connections" class="justify-self-end h-16 w-16 flex flex-col ml-1">
+      <div v-if="render.sentence.connections" class=" w-16 flex flex-col ml-1 space-y-1">
         <div v-for="connection in render.sentence.connections.filter(connection => connection.type == 'halakhah').slice(0, 4)"
-             class="h-4 w-full bg-gray-200 border-2 rounded-sm border-gray-700 truncate"
+             class="h-4 w-full  bg-pink-200 border-2 rounded-sm border-pink-500 truncate"
              @click="event => connectionClicked(event, connection)"
         >
           <div class="commentary-text">{{connection.author}}</div>
@@ -87,19 +74,22 @@
         </div>
       </div>
     </div>
+
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 
 import {defineComponent, PropType, toRaw} from "vue";
-import {sentenceRender, sentenceData } from "../state/types";
+import {sentenceRender, sentenceData } from "../../state/types";
 import {
   selectSentence,
   selectCommentary,
   selectConnection, clearConnection
-} from "../state/actions";
-import {selectedConnection} from "../state/selections";
+} from "../../state/actions";
+import SentenceBlocksCol from "./SentenceBlocksCol.vue";
+import {selectedConnection} from "../../state/selections";
 
 type node = {
   parent: node | undefined
@@ -116,6 +106,7 @@ type row = {
 
 
 export default defineComponent({
+  components: {SentenceBlocksCol},
   props: {
     sentences: Array as PropType<Array<sentenceRender>>,
     selectedIndex: Number,

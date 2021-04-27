@@ -34,7 +34,7 @@
 <script lang="ts">
   import NavListView from "./NavListView.vue";
   import {defineComponent} from "vue";
-  import NavMapView from "./NavMapView.vue";
+  import NavMapView from "./NavMap/NavMapView.vue";
   import {currentDaf, currentSentenceRenders, currentSentenceRange} from "../state/current";
   import {selectSentence} from "../state/actions";
   import {sentenceData, sentenceRender} from "../state/types";
