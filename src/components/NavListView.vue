@@ -42,7 +42,7 @@
             <div v-else class="rtl text-right" v-html="render.sentence.he"></div>
           </div>
           <div class="self-start float-right">
-            <a @click="expanded.delete(render.sentenceId)">
+            <a @click.stop="expanded.delete(render.sentenceId)">
               <i class="fas text-xl fa-caret-down"></i>
             </a>
           </div>
@@ -51,7 +51,7 @@
              :class="{'flex-row-reverse': !english}">
           <div class="text-sm flex-grow font-semibold truncate" :class="{rtl: !english}" v-html="english ? render.shortEn : render.shortHe">
           </div>
-          <a v-show="hovered == index" @click="expanded.add(render.sentenceId)">
+          <a v-show="hovered == index" @click.stop="expanded.add(render.sentenceId)">
             <i class="fas text-xl"  :class="[english ? 'fa-caret-right' : 'fa-caret-left']"></i>
           </a>
         </div>
