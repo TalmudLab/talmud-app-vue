@@ -43,8 +43,8 @@
 
       </div>
 
-      <div class="h-16 w-16 flex flex-col ml-1">
-        <div v-for="modern in render.sentence.connections"
+      <div v-if="render.sentence.connections" class="h-16 w-16 flex flex-col ml-1">
+        <div v-for="modern in render.sentence.connections.filter(connection => connection.type == 'modern')"
              class="h-9 w-full  bg-yellow-200 border-2 rounded-sm border-yellow-500"
              @click="event => connectionClicked(event, modern)"
         >
