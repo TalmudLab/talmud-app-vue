@@ -1,1 +1,1 @@
-This was our Spring 2021 demo of a talmud app that uses our rendering library and text analysis.
+This was our Spring 2021 demo of a talmud app that uses our rendering library and text analysis. It's up and running [here](https://www.demo.talmud.app/). Continued development of the app will take place in a separate, open-source repo this fall!
